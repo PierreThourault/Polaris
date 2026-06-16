@@ -1,59 +1,53 @@
+# Librairies
 from netCDF4 import Dataset
 import numpy as np
 import os
 import glob
 import shutil
+import xarray as xr
+
+# Modules
 from healpy_pointings import rot_mat
 import utils_intensity_map as uim
 import utils_healpy as uhp
 
 
-def read_nn_weights(filename_nn_weights):
-    parameters = {}
+def save_general_netcdf(parameters: dict, filename: str, extra_dimension: dict = {}):
+    data_vars = {}
+    attrs = {}
 
-    rootgrp = Dataset(filename_nn_weights + ".nc")
-    keys = list(rootgrp["parameters"].variables.keys())
-    for key in keys:
-        if np.shape(np.shape(rootgrp["parameters"][key]))[0] == 2:
-            parameters[key] = rootgrp["parameters"][key][:,:]
-        if np.shape(np.shape(rootgrp["parameters"][key]))[0] == 1:
-            parameters[key] = rootgrp["parameters"][key][:]
-    rootgrp.close()
+    for key, item in parameters.items():
+        # Scalaires → attributs globaux (comme avant)
+        if np.ndim(item) == 0:
+            val = item
+            if isinstance(val, bool):
+                val = int(val)
+            attrs[key] = val
+            continue
 
-    return parameters
+        item = np.asarray(item)
 
+        # Strings : xarray les gère nativement, pas besoin d'encodage S1
+        if item.dtype.kind in ('U', 'S', 'O'):
+            item = item.astype(str)
 
+        # Nommage des dimensions par variable pour rester cohérent avec l'original
+        dims = [f"{key}_dim{i+1}" for i in range(item.ndim)]
+        data_vars[key] = xr.Variable(dims, item)
 
-def read_general_netcdf(filename):
-    parameters = {}
+    # Dimensions supplémentaires → coords vides
+    coords = {key: np.arange(size) for key, size in extra_dimension.items()}
 
-    rootgrp = Dataset(filename)
-    keys = list(rootgrp.variables.keys())
-    for key in keys:
-        if np.shape(np.shape(rootgrp[key]))[0] == 3:
-            parameters[key] = rootgrp[key][:,:,:]
-        if np.shape(np.shape(rootgrp[key]))[0] == 2:
-            parameters[key] = rootgrp[key][:,:]
-        if np.shape(np.shape(rootgrp[key]))[0] == 1:
-            parameters[key] = rootgrp[key][:]
-        #print(key, parameters[key])
+    ds = xr.Dataset(data_vars, coords=coords, attrs=attrs)
+    ds.to_netcdf(filename)
 
-    keys = list(rootgrp.__dict__.keys())
-    for key in keys:
-        parameters[key] = getattr(rootgrp, key)
-
-    rootgrp.close()
-
-    return parameters
-
-
-
-def save_general_netcdf(parameters, filename, extra_dimension={}):
+def save_general_netcdf_original(parameters, filename, extra_dimension={}):
     if os.path.exists(filename):
         os.remove(filename)
 
     rootgrp = Dataset(filename, 'w')
     for key, item in parameters.items():
+        print(key, type(item))
         dims = np.shape(item)
         total_dims = np.shape(dims)[0]
         #print(key, type(item))
@@ -118,6 +112,24 @@ def save_general_netcdf(parameters, filename, extra_dimension={}):
         rootgrp.createDimension(key, int(item))
     rootgrp.close()
 
+# Utilisées dans load_data_dicts_from_file de utils_deck_generation.py
+def read_general_netcdf(filename: str) -> dict:
+    parameters = {}
+
+    with xr.open_dataset(filename) as ds:
+        # Variables → numpy arrays (équivalent des boucles sur ndim)
+        for key, var in ds.data_vars.items():
+            values = var.values
+            # Reconversion strings : bytes → str si nécessaire
+            if values.dtype.kind == 'S':
+                values = values.astype(str)
+            parameters[key] = values
+
+        # Attributs globaux (scalaires stockés via setattr dans l'original)
+        for key, val in ds.attrs.items():
+            parameters[key] = val
+
+    return parameters
 
 
 def retrieve_xtrain_and_delete(min_parallel, max_parallel, dataset, dataset_params, sys_params, facility_spec):
@@ -127,13 +139,16 @@ def retrieve_xtrain_and_delete(min_parallel, max_parallel, dataset, dataset_para
         for tind in range(dataset_params["num_profiles_per_config"]):
             run_location = config_location + "/" + sys_params["sim_dir"] + str(tind)
             dir_illumination = run_location+"/"+sys_params["heat_source_nc"]
+
+            print("Looking for illumination in: " + dir_illumination) 
+            
             if os.path.exists(dir_illumination):
+                print("Found illumination in: " + dir_illumination)
                 hs_and_modes = read_general_netcdf(dir_illumination)
                 dataset["real_modes"][iex,tind,:], dataset["imag_modes"][iex,tind,:], dataset["avg_flux"][iex,tind] = uim.heatsource_analysis(hs_and_modes)
                 dataset["rms"][iex,tind] = uim.alms2rms(dataset["real_modes"][iex,tind,:], dataset["imag_modes"][iex,tind,:], dataset_params["LMAX"])
                 dataset["power_deposited"][iex,tind] = uim.power_deposited(hs_and_modes)
 
-                print(dir_illumination)
                 print("With density profiles:")
                 print('Total power emitted   {:.2f}TW, '.format(dataset["power_emitted"][iex,tind] / 1.0e12))
                 print('Total power deposited {:.2f}TW, '.format(dataset["power_deposited"][iex,tind] / 1.0e12))
@@ -141,17 +156,21 @@ def retrieve_xtrain_and_delete(min_parallel, max_parallel, dataset, dataset_para
                 print("The rms is: {:.2f} %".format(dataset["rms"][iex,tind]*100.0))
 
             else:
-                dir_illumination = run_location + "/" + sys_params["ifriit_ouput_name"]
+                dir_illumination = run_location + "/pert_0/" + sys_params["ifriit_ouput_name"]
+                print("Looking for illumination in: " + dir_illumination)
                 if os.path.exists(dir_illumination):
+                    print("Found illumination in: " + dir_illumination)
+
                     parameters = read_general_netcdf(dir_illumination)
+                    
                     intensity_map = parameters["intensity"] * (dataset_params['illumination_evaluation_radii'][tind] / 10000.0)**2
 
                     intensity_map_normalized, dataset["avg_flux"][iex,tind] = uim.imap_norm(intensity_map)
+                    
                     dataset["real_modes"][iex,tind,:], dataset["imag_modes"][iex,tind,:] = uhp.imap2modes(intensity_map_normalized, dataset_params["LMAX"])
                     dataset["rms"][iex,tind] = uim.alms2rms(dataset["real_modes"][iex,tind,:], dataset["imag_modes"][iex,tind,:], dataset_params["LMAX"])
                     dataset["power_deposited"][iex,tind] = dataset["avg_flux"][iex,tind] * 4.0 * np.pi
 
-                    print(dir_illumination)
                     print("Without density profiles:")
                     print('Total power emitted   {:.2f}TW, '.format(dataset["power_emitted"][iex,tind] / 1.0e12))
                     print('Total power deposited {:.2f}TW, '.format(dataset["power_deposited"][iex,tind] / 1.0e12))
@@ -173,6 +192,44 @@ def retrieve_xtrain_and_delete(min_parallel, max_parallel, dataset, dataset_para
                 shutil.rmtree(config_location)
     return dataset
 
+
+
+
+
+# Utilisées dans le notebook compare_datasets.ipynb 
+def read_intensity(data_location, nside, target_radius_microns):
+    file_name = data_location + '/p_in_z1z2_beam_all.nc'
+
+    cone_data = Dataset(file_name)
+    intensity_data = cone_data.variables["intensity"][:]
+    theta = cone_data.variables["theta"][:]
+    phi = cone_data.variables["phi"][:]
+    cone_data.close()
+
+    indices = np.argsort(phi + theta * nside**2*12)
+    intensity_map = intensity_data[indices]
+
+    # convert from W/cm^2 to W/sr
+    intensity_map = intensity_map * (target_radius_microns / 10000.0)**2
+
+    return intensity_map
+
+
+########## Utilisées nulle part ##############
+
+def read_nn_weights(filename_nn_weights):
+    parameters = {}
+
+    rootgrp = Dataset(filename_nn_weights + ".nc")
+    keys = list(rootgrp["parameters"].variables.keys())
+    for key in keys:
+        if np.shape(np.shape(rootgrp["parameters"][key]))[0] == 2:
+            parameters[key] = rootgrp["parameters"][key][:,:]
+        if np.shape(np.shape(rootgrp["parameters"][key]))[0] == 1:
+            parameters[key] = rootgrp["parameters"][key][:]
+    rootgrp.close()
+
+    return parameters
 
 
 def save_nn_weights(parameters, filename_nn_weights):
@@ -208,27 +265,30 @@ def save_nn_weights(parameters, filename_nn_weights):
     rootgrp.close()
 
 
-
-def read_intensity(data_location, nside, target_radius_microns):
-    file_name = data_location + '/p_in_z1z2_beam_all.nc'
-
-    cone_data = Dataset(file_name)
-    intensity_data = cone_data.variables["intensity"][:]
-    theta = cone_data.variables["theta"][:]
-    phi = cone_data.variables["phi"][:]
-    cone_data.close()
-
-    indices = np.argsort(phi + theta * nside**2*12)
-    intensity_map = intensity_data[indices]
-
-    # convert from W/cm^2 to W/sr
-    intensity_map = intensity_map * (target_radius_microns / 10000.0)**2
-
-    return intensity_map
-
-
-
 def create_training_data(the_data, num_cones, pointing_nside, num_defocus, num_powers, num_coeff, num_output, num_examples, power_range, LMAX, savename_trainingdata, filename_pointing, filename_defocus):
+
+    def save_training_data(X_train, Y_train, avg_powers, filename_trainingdata):
+        num_examples = np.shape(X_train)[1]
+        num_inputs = np.shape(X_train)[0]
+        num_output = np.shape(Y_train)[0]
+
+        if os.path.exists(filename_trainingdata):
+            os.remove(filename_trainingdata)
+        rootgrp = Dataset(filename_trainingdata, "w", format="NETCDF4")
+        rootgrp.createDimension('num_examples', num_examples)
+        rootgrp.createDimension('num_coeff_ir', num_inputs)
+        rootgrp.createDimension('num_output', num_output)
+
+        X_train_save = rootgrp.createVariable('X_train', 'f4', ('num_coeff_ir','num_examples'))
+        X_train_save[:,:] = X_train
+
+        Y_train_save = rootgrp.createVariable('Y_train', 'f4', ('num_output','num_examples'))
+        Y_train_save[:,:] = Y_train
+
+        avg_powers_save = rootgrp.createVariable('avg_powers', 'f4', ('num_examples'))
+        avg_powers_save[:] = avg_powers
+
+        rootgrp.close()
 
     pointing_per_cone = [0,0,0,0]
     defocus_per_cone = [0,0,0,0]
@@ -261,32 +321,6 @@ def create_training_data(the_data, num_cones, pointing_nside, num_defocus, num_p
     save_training_data(X_train, Y_train, avg_powers, savename_trainingdata)
 
 
-
-def save_training_data(X_train, Y_train, avg_powers, filename_trainingdata):
-    num_examples = np.shape(X_train)[1]
-    num_inputs = np.shape(X_train)[0]
-    num_output = np.shape(Y_train)[0]
-
-    if os.path.exists(filename_trainingdata):
-        os.remove(filename_trainingdata)
-    rootgrp = Dataset(filename_trainingdata, "w", format="NETCDF4")
-    rootgrp.createDimension('num_examples', num_examples)
-    rootgrp.createDimension('num_coeff_ir', num_inputs)
-    rootgrp.createDimension('num_output', num_output)
-
-    X_train_save = rootgrp.createVariable('X_train', 'f4', ('num_coeff_ir','num_examples'))
-    X_train_save[:,:] = X_train
-
-    Y_train_save = rootgrp.createVariable('Y_train', 'f4', ('num_output','num_examples'))
-    Y_train_save[:,:] = Y_train
-
-    avg_powers_save = rootgrp.createVariable('avg_powers', 'f4', ('num_examples'))
-    avg_powers_save[:] = avg_powers
-
-    rootgrp.close()
-
-
-
 def import_training_data_reversed(sys_params, LMAX):
     training_data = Dataset(sys_params["data_dir"] + "/" + sys_params["trainingdata_filename"])
     X_all = training_data.variables["Y_train"][:]
@@ -297,7 +331,6 @@ def import_training_data_reversed(sys_params, LMAX):
     Y_mag = uim.change_number_modes(Y_all, avg_powers_all, LMAX)
 
     return X_all, Y_mag, avg_powers_all
-
 
 
 def import_training_data(sys_params):
