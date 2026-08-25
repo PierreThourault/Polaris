@@ -121,6 +121,7 @@ def define_dataset_params(num_examples, sys_params,
         ##### IMPORTANTS #####
         dataset_params["beamspot_order_default"] = 2.8 #3.6 xavier ico80 60+20
         dataset_params["beamspot_radius_default"] = dataset_params['target_radius']*0.78
+        dataset_params["compensation_perte_faisceau"] = False 
         ######################
 
         dataset_params["scan_beamspot_bool"] = False
@@ -170,7 +171,7 @@ def define_dataset_params(num_examples, sys_params,
     dataset_params["run_with_cbet"] = False
     dataset_params["run_plasma_profile"] = False
 
-    dataset_params['target_radius'] = 2307.0
+    dataset_params['target_radius'] = 1940.0 #2307.0
     dataset_params['default_power'] = 1.0 # default power per beam TW
 
     dataset_params["plasma_profile_source"] = "default" #"multi" # "default"
@@ -203,10 +204,11 @@ def define_dataset_params(num_examples, sys_params,
         dataset_params["beam_mispointing_amplitude_mean"] = 0.05  # fraction of target radius
     
     # Power imbalance - use argument if provided, otherwise default
+    dataset_params["power_loss_quanta"] = dataset_params['default_power']/32
     if pi_amplitude is not None:
         dataset_params["power_imbalance_bool"] = pi_amplitude > 0
         dataset_params["power_imbalance_amplitude_mean"] = pi_amplitude
-        dataset_params["power_loss_quanta"] = dataset_params['default_power']/32
+        
     else:
         dataset_params["power_imbalance_bool"] = False
         dataset_params["power_imbalance_amplitude_mean"] = 0.05  # fraction of default power
@@ -434,11 +436,11 @@ def main(argv):
         args_start = 3
 
     # Parse optional TO/BM/perturbation arguments
-    num_perturbations = 50 # number of perturbation samples (if None, uses default in define_dataset_params)
+    num_perturbations = 1 # number of perturbation samples (if None, uses default in define_dataset_params)
 
     to_amplitude = None # target offset amplitude (fraction of target radius ?)
     bm_amplitude = None # beam mispointing amplitude (fraction of target radius ?)
-    pi_amplitude = 0.005 # power imbalance amplitude (fraction of default power ?)
+    pi_amplitude = None #0.005 # power imbalance amplitude (fraction of default power ?)
 
     num_parallel = None # number of parallel ifriit runs (overrides sys_params if provided)
     num_openmp = None # number of OpenMP threads (overrides sys_params if provided)
@@ -497,9 +499,7 @@ def main(argv):
         
         dataset = define_dataset(dataset_params)
 
-        print("populate_dataset_random_inputs!----------------")
         dataset = populate_dataset_random_inputs(dataset_params, dataset) # si pas de sampling alors aucune modif
-        print("populate_dataset_random_inputs done!----------------")
         
         deck_gen_params = udg.define_deck_generation_params(dataset_params, facility_spec)
 

@@ -4,11 +4,13 @@ import os
 import shutil
 import numpy as np
 import csv
+import pickle
 
 # Modules
 import healpy_pointings as hpoint
 import netcdf_read_write as nrw
 import utils_multi as um
+import controle_taches as ct
 
 def define_deck_generation_params(dataset_params, facility_spec):
     num_examples = dataset_params["num_examples"]
@@ -84,7 +86,7 @@ def create_run_files_direct_drive(dataset, deck_gen_params, dataset_params, sys_
         npoints = dataset_params["num_perturbations"]
         sigma_beam_mispointing = dataset_params["beam_mispointing_amplitude_mean"] * dataset_params["target_radius"]
         for j in range(facility_spec["nbeams"]):
-            x_mis = np.random.normal(0,sigma_beam_mispointing,npoints)
+            x_mis = np.random.normal(0,sigma_beam_mispointing,npoints) # micron
             y_mis = np.random.normal(0,sigma_beam_mispointing,npoints)
             deck_gen_params["xy-mispoint"][:,j,:] = np.column_stack((x_mis, y_mis))
         return deck_gen_params 
@@ -102,32 +104,10 @@ def create_run_files_direct_drive(dataset, deck_gen_params, dataset_params, sys_
         
 
         default_power = dataset_params["default_power"]
-
         sigma = dataset_params["power_imbalance_amplitude_mean"]* default_power
-
-        deck_gen_params["p0"] = np.random.normal(default_power,sigma,deck_gen_params["p0"].shape) # tire une valeur aléatoire dans un tableau de taille deck_gen_params["p0"].shape
-        
-        
-        nbeams = facility_spec["nbeams"]
-        num_perturbations = dataset_params["num_perturbations"]
-        power_loss_quanta = dataset_params["power_loss_quanta"] # régler à power_default/32
-        list_of_all_beams = range(nbeams)
-        list_of_all_affected_beams = [0,1,2,8,9]
-        num_affected_beams = len(list_of_all_affected_beams)
-        random = True
-        
-        if random == True:
-            for k in range(1,num_perturbations):
-                beam_idx = np.random.choice(list_of_all_beams)
-                # deck_gen_params["p0"](num_examples, num_ifriit_beams,dataset_params["num_profiles_per_config"], num_perturbs) -> (1, beam, 1, pert)
-                deck_gen_params["p0"][:, beam_idx, :, k:] -= power_loss_quanta
-        else:
-            num_quanta = [2]*nbeams
-            for i in range(num_affected_beams):
-                deck_gen_params["p0"][:,list_of_all_affected_beams[i],:,:]  -= num_quanta[i]*power_loss_quanta
-
-        #sécurité : pas de puissance négative
-        deck_gen_params["p0"] = np.maximum(deck_gen_params["p0"], 0.0) # compare chaque élément de deck_gen_params["p0"] à 0.0 et prend le maximum
+        sigma = sigma/np.sqrt(32)
+        deck_gen_params["p0"] = np.random.normal(default_power,sigma,deck_gen_params["p0"].shape)
+         # tire une valeur aléatoire dans un tableau de taille deck_gen_params["p0"].shape
 
         return deck_gen_params
     
@@ -135,7 +115,7 @@ def create_run_files_direct_drive(dataset, deck_gen_params, dataset_params, sys_
     num_examples = dataset_params["num_examples"]
     num_vars = dataset_params["num_variables_per_beam"]
    
-    deck_gen_params['pointings'][:,:,:] = np.zeros(3)
+    deck_gen_params['pointings'][:,:,:] = np.zeros(3) 
     deck_gen_params["p0"][:,:,:,:] = dataset_params['default_power']
    
     if dataset_params["target_offset_bool"]:
@@ -144,10 +124,13 @@ def create_run_files_direct_drive(dataset, deck_gen_params, dataset_params, sys_
         deck_gen_params = populate_dataset_random_perturbations_BM(dataset_params, deck_gen_params, sys_params, facility_spec)
     if dataset_params["power_imbalance_bool"]:
         deck_gen_params = populate_dataset_random_perturbations_PI(dataset_params, deck_gen_params, sys_params, facility_spec)
-   
-    for iconfig in range(dataset["num_evaluated"], num_examples):
-        ex_params = dataset["input_parameters"][iconfig,:]
+    
 
+    for iconfig in range(dataset["num_evaluated"], num_examples):
+        
+        ct.compensation_perte_faisceau(dataset_params, deck_gen_params, facility_spec,iconfig)
+
+        ex_params = dataset["input_parameters"][iconfig,:]
         if dataset_params["scan_beamspot_bool"]:
             deck_gen_params["beamspot_order"][iconfig,:] = (dataset_params["beamspot_order_max"] - 1.0) \
                                                            * ex_params[dataset_params["beamspot_order_index"]] + 1.0
@@ -621,13 +604,14 @@ def generate_run_files(dataset, dataset_params, facility_spec, sys_params, deck_
                         config_location)
  
       for tind in range(dataset_params["num_profiles_per_config"]):
-          for ipert in range(dataset_params["num_perturbations"]):
-              generate_input_deck(iconfig, tind, ipert, dataset_params, facility_spec, sys_params, deck_gen_params)
-              if dataset_params["time_varying_pulse"]:
-                  pwr_ind = tind
-              else:
-                  pwr_ind = 0
-              generate_input_pointing_and_pulses(iconfig, tind, ipert, pwr_ind, dataset_params, facility_spec, sys_params, deck_gen_params)
+            for ipert in range(dataset_params["num_perturbations"]):
+                generate_input_deck(iconfig, tind, ipert, dataset_params, facility_spec, sys_params, deck_gen_params)
+                if dataset_params["time_varying_pulse"]:
+                    pwr_ind = tind
+                else:
+                    pwr_ind = 0
+                generate_input_pointing_and_pulses(iconfig, tind, ipert, pwr_ind, dataset_params, facility_spec, sys_params, deck_gen_params)
+      
 
 
 def generate_input_deck(iconfig, tind, ipert, dataset_params, facility_spec, sys_params, deck_gen_params):
@@ -667,25 +651,27 @@ def generate_input_deck(iconfig, tind, ipert, dataset_params, facility_spec, sys
 
 
 def generate_input_pointing_and_pulses(iconfig, tind, ipert, pwr_ind, dataset_params, facility_spec, sys_params, deck_gen_params):
+    
     config_location = sys_params["data_dir"] + "/" + sys_params["config_dir"] + str(iconfig)
     run_location = config_location + "/" + sys_params["sim_dir"] + str(tind) + "/" + sys_params["pert_dir"] + str(ipert)
-
+    
     with open(run_location+'/ifriit_inputs.txt','a') as f:
         for j in range(int(facility_spec['nbeams'] / facility_spec['beams_per_ifriit_beam'])):
             f.write('&BEAM\n')
             f.write('    LAMBDA_NM           = {:.10f}d0,\n'.format(1052.85/3.))
-            pointing = deck_gen_params['pointings'][iconfig, j, ipert]  # Ajouter ipert ici !
+
+                        
+            pointing = deck_gen_params['pointings'][iconfig, j, ipert]  
             f.write('    FOC_UM              = {:.10f}d0,{:.10f}d0,{:.10f}d0,\n'.format(
                     float(pointing[0]),
                     float(pointing[1]),
                     float(pointing[2])
                     ))
-            #f.write('    FOC_UM              = {:.10f}d0,{:.10f}d0,{:.10f}d0,\n'.format(deck_gen_params['pointings'][iconfig,j][0],deck_gen_params['pointings'][iconfig,j][1],deck_gen_params['pointings'][iconfig,j][2]))
+
             if dataset_params["plasma_profile_source"] == "multi":
                 f.write('    POWER_PROFILE_FILE_TW_NS = "'+sys_params["ifriit_pulse_name"]+'"\n')
                 f.write('    T_0_NS              = {:.10f}d0,\n'.format(dataset_params["plasma_profile_times"][tind]))
             else:
-                #f.write('    P0_TW               = {:.10f}d0,\n'.format(deck_gen_params['p0'][iconfig,j,pwr_ind]))
                 f.write('    P0_TW               = {:.10f}d0,\n'.format(deck_gen_params['p0'][iconfig,j,pwr_ind,ipert]))
 
             if (dataset_params['facility'] == "custom_facility"):
@@ -740,3 +726,4 @@ def generate_input_pointing_and_pulses(iconfig, tind, ipert, pwr_ind, dataset_pa
             j = j + 1
         f.write('\n')
         f.write('! Last line must not be empty')
+        return 
