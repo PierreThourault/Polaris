@@ -95,9 +95,9 @@ def compensation_perte_faisceau(dataset_params, deck_gen_params, facility_spec, 
         pointing_affected_beams = [0, 1, 2, 8, 9]
         P_theta = np.array([beams[i]["theta"] for i in range(n)])
         P_phi = np.array([beams[i]["phi"] for i in range(n)])
-        for i in pointing_affected_beams:
-            P_theta[i] += np.pi/8 
-            P_phi[i] += np.pi/8 
+        # for i in pointing_affected_beams:
+        #     P_theta[i] += np.pi/8 
+        #     P_phi[i] += np.pi/8 
 
         # Conditions initiales de puissance
         power_affected_beams = [0, 1, 2, 8, 9]
@@ -126,8 +126,6 @@ def compensation_perte_faisceau(dataset_params, deck_gen_params, facility_spec, 
             for beam in power_affected_beams:
                 free_mask[beam] = False
 
-            for beam in range(n):
-                free_mask[beam] = False
 
             free_idx = np.where(free_mask)[0] # permet de trouver les indices des éléments qui sont vrais
 
