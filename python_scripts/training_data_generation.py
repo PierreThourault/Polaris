@@ -121,7 +121,7 @@ def define_dataset_params(num_examples, sys_params,
         ##### IMPORTANTS #####
         dataset_params["beamspot_order_default"] = 2.8 #3.6 xavier ico80 60+20
         dataset_params["beamspot_radius_default"] = dataset_params['target_radius']*0.78
-        dataset_params["compensation_perte_faisceau"] = False 
+        dataset_params["compensation_perte_faisceau"] = True
         ######################
 
         dataset_params["scan_beamspot_bool"] = False
@@ -440,7 +440,7 @@ def main(argv):
 
     to_amplitude = None # target offset amplitude (fraction of target radius ?)
     bm_amplitude = None # beam mispointing amplitude (fraction of target radius ?)
-    pi_amplitude = None #0.005 # power imbalance amplitude (fraction of default power ?)
+    pi_amplitude = 0.005 # power imbalance amplitude (fraction of default power ?)
 
     num_parallel = None # number of parallel ifriit runs (overrides sys_params if provided)
     num_openmp = None # number of OpenMP threads (overrides sys_params if provided)
