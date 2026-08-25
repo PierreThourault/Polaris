@@ -44,25 +44,40 @@ def retrieve_data2dicts(dataset, p_in_z1z2_beam_all,input_files,num_perturbation
                      "ifriit_inputs":      input_files[j]}
     return all_tree
 
+# def retrieve_data2dicts(p_in_z1z2_beam_all,num_perturbations):
+#     all_tree = {}
+#     for j in range(num_perturbations):
+#         all_tree[j] = {"p_in_z1z2_beam_all": p_in_z1z2_beam_all[j]}
+#     return all_tree
+
+
+
 def parse_beam_params(filepath):
     beams = []
-    keys = {"P0_TW", "THETA_DEG", "PHI_DEG"}
-
+    keys = {"P0_TW", "THETA_DEG", "PHI_DEG", "FOC_UM"}
     with open(filepath, "r") as f:
         content = f.read()
-
     for block in re.findall(r"&BEAM(.*?)/", content, re.DOTALL):
         beam = {}
         for key in keys:
-            match = re.search(rf"{key}\s*=\s*([\-\d\.d]+)", block)
-            if match:
-                beam[key] = float(match.group(1).replace("d", "e").replace("D", "e"))
+            if key == "FOC_UM":
+                # capture toute la liste de valeurs sur la ligne (séparées par des virgules)
+                match = re.search(rf"{key}\s*=\s*([\-\d\.dDeE,\s]+)", block)
+                if match:
+                    raw_values = match.group(1).strip().rstrip(",").split(",")
+                    beam[key] = [
+                        float(v.strip().replace("d", "e").replace("D", "e"))
+                        for v in raw_values if v.strip()
+                    ]
+            else:
+                match = re.search(rf"{key}\s*=\s*([\-\d\.dD]+)", block)
+                if match:
+                    beam[key] = float(match.group(1).replace("d", "e").replace("D", "e"))
         beams.append(beam)
-
     return beams  # liste de 30 dicts
 
 
-num_tree = 50
+num_tree = 1
 all_tree = {}
 main_dir = "../Data/Data_run5"
 second_dir = "../Data/Data_run5/config_0/time_0"
@@ -92,7 +107,8 @@ for i in range(num_tree):
             input_files.append(parse_beam_params(second_dir + "/pert_" + str(j) + "/ifriit_inputs.txt"))
 
         all_tree[i] = retrieve_data2dicts(dataset, p_in_z1z2_beam_all,input_files,num_perturbations)
-        
+        # all_tree[i] = retrieve_data2dicts(p_in_z1z2_beam_all,num_perturbations)
+
         if i < num_tree-1:
             shutil.rmtree(main_dir)
 
