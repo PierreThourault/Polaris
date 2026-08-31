@@ -44,13 +44,6 @@ def retrieve_data2dicts(dataset, p_in_z1z2_beam_all,input_files,num_perturbation
                      "ifriit_inputs":      input_files[j]}
     return all_tree
 
-# def retrieve_data2dicts(p_in_z1z2_beam_all,num_perturbations):
-#     all_tree = {}
-#     for j in range(num_perturbations):
-#         all_tree[j] = {"p_in_z1z2_beam_all": p_in_z1z2_beam_all[j]}
-#     return all_tree
-
-
 
 def parse_beam_params(filepath):
     beams = []
@@ -77,7 +70,7 @@ def parse_beam_params(filepath):
     return beams  # liste de 30 dicts
 
 
-num_tree = 1
+num_tree = 10
 all_tree = {}
 main_dir = "../Data/Data_run5"
 second_dir = "../Data/Data_run5/config_0/time_0"
@@ -107,10 +100,6 @@ for i in range(num_tree):
             input_files.append(parse_beam_params(second_dir + "/pert_" + str(j) + "/ifriit_inputs.txt"))
 
         all_tree[i] = retrieve_data2dicts(dataset, p_in_z1z2_beam_all,input_files,num_perturbations)
-        # all_tree[i] = retrieve_data2dicts(p_in_z1z2_beam_all,num_perturbations)
-
-        if i < num_tree-1:
-            shutil.rmtree(main_dir)
 
         endtime = time.time()
 
