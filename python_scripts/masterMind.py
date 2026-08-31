@@ -70,10 +70,10 @@ def parse_beam_params(filepath):
     return beams  # liste de 30 dicts
 
 
-num_tree = 10
+num_tree = 1
 all_tree = {}
-main_dir = "../Data/Data_run5"
-second_dir = "../Data/Data_run5/config_0/time_0"
+main_dir = "../Data/Data_run"
+second_dir = "../Data/Data_run/config_0/time_0"
 
 
 for i in range(num_tree):
