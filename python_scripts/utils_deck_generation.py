@@ -10,7 +10,7 @@ import pickle
 import healpy_pointings as hpoint
 import netcdf_read_write as nrw
 import utils_multi as um
-import controle_taches as ct
+import conditions_initiales_taches as ci
 
 def define_deck_generation_params(dataset_params, facility_spec):
     num_examples = dataset_params["num_examples"]
@@ -128,7 +128,7 @@ def create_run_files_direct_drive(dataset, deck_gen_params, dataset_params, sys_
 
     for iconfig in range(dataset["num_evaluated"], num_examples):
         
-        ct.compensation_perte_faisceau(dataset_params, deck_gen_params, facility_spec,iconfig)
+        ci.conditions_initiales_P0_FOC(dataset_params, deck_gen_params, facility_spec, iconfig)
 
         ex_params = dataset["input_parameters"][iconfig,:]
         if dataset_params["scan_beamspot_bool"]:
