@@ -58,8 +58,6 @@ def define_dataset_params(num_examples, sys_params,
                           random_seed=12345):
     dataset_params = {}
     dataset_params["facility"] = "omega" #"custom_facility" #"nif" #"lmj" # "omega"
-    # ifriit_facility_name only used for "custom_facility"
-    ifriit_facility_name = "ico80" #"cpm768" #"cpm200" #"cpm48" #"cpm72" #"t11_b72" #"ico80"
     dataset_params["num_examples"] = num_examples
     dataset_params["random_seed"] = random_seed
     dataset_params["sampling_method"] = "random" #"random", "lhs", "linear"
@@ -69,10 +67,6 @@ def define_dataset_params(num_examples, sys_params,
     dataset_params["fuse_quad_bool"] = False
 
     dataset_params['target_radius'] = 2307.0
-    dataset_params['custom_beam_groups_bool'] = False
-    dataset_params["custom_beam_groups_name"] = "just_40"
-    dataset_params["pointings_zooming_bool"] = False
-    dataset_params["pointings_file_name"] = "point_Theobald2012.txt"
 
     dataset_params["plasma_profile_source"] = "default" #"multi" # "default"
     dataset_params['laser_wavelength_nm'] = 351.0 # multi inputs over-ride this
@@ -94,12 +88,11 @@ def define_dataset_params(num_examples, sys_params,
     elif (dataset_params["facility"] == "lmj") or (dataset_params["facility"] == "test"):
         facility_spec, dataset_params = idg.import_lmj_config(sys_params, dataset_params)
     elif (dataset_params["facility"]=="custom_facility") or (dataset_params["facility"]=="omega"):
-        facility_spec = idg.import_direct_drive_config(sys_params, dataset_params, ifriit_facility_name)
+        facility_spec = idg.import_direct_drive_config(sys_params, dataset_params)
+    elif (dataset_params["facility"] == "omega"):
+        facility_spec = idg.import_direct_drive_config(sys_params)
 
-    if dataset_params["pointing_per_beam_bool"]:
-        dataset_params["num_input_params"] = facility_spec['nbeams'] * dataset_params["num_variables_per_beam"]
-    else:
-        dataset_params["num_input_params"] = dataset_params['num_beam_groups'] * dataset_params["num_variables_per_beam"]
+    dataset_params["num_input_params"] = dataset_params['num_beam_groups'] * dataset_params["num_variables_per_beam"]
 
     return dataset_params, facility_spec
 
@@ -111,7 +104,6 @@ def define_scan_parameters(dataset_params):
     # pointings
     dataset_params["theta_bool"] = False
     dataset_params["pointing_bool"] = False
-    dataset_params["pointing_per_beam_bool"] = False
     dataset_params["surface_cover_radians"] = np.radians(30.0)
     if dataset_params["theta_bool"]:
         dataset_params["theta_index"] = num_variables_per_beam
@@ -344,13 +336,6 @@ def main(argv):
         deck_gen_params = idg.create_run_files(dataset, deck_gen_params, dataset_params, sys_params, facility_spec)
         idg.save_data_dicts_to_file(sys_params, dataset, dataset_params, deck_gen_params, facility_spec)
         copy_python_files(sys_params)
-
-    if (run_type=="single_config"):
-        print("Running file setup for ", int(argv[2]))
-        dataset, dataset_params, deck_gen_params, facility_spec = idg.load_data_dicts_from_file(sys_params)
-        dataset["num_evaluated"] = int(argv[2])
-        dataset_params["num_examples"] = int(argv[2])+1
-        idg.generate_run_files(dataset, dataset_params, facility_spec, sys_params, deck_gen_params)
 
     if (run_type=="restart") or (run_type=="full"):
         dataset, dataset_params, deck_gen_params, facility_spec = idg.load_data_dicts_from_file(sys_params)
