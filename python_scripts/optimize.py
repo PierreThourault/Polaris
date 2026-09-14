@@ -10,6 +10,15 @@ import time
 import os
 import shutil
 import copy
+############
+from unittest import result
+import subprocess as sp
+import xarray as xr
+from scipy.optimize import minimize
+import healpy as hp
+import re
+import time
+import matplotlib.pyplot as plt
 
 
 def wrapper_bayesian_optimisation(dataset, bo_params, opt_params):
@@ -172,10 +181,22 @@ def wrapper_genetic_algorithm(dataset, ga_params, opt_params):
     return dataset
 
 
-def wrapper_L_BFGS_B():
+def wrapper_L_BFGS_B(x0_norm, args, bounds_norm, options, center, scale,NBEAMS):
+    history = []
+    last_cost = {"value": None}
 
-    return 
+    def objective_scaled(x_norm, *args_inner):
+        x_real = center + scale * x_norm
+        cost = uopt.objective(x_real, *args_inner,NBEAMS)
+        last_cost["value"] = cost
+        return cost
 
+    def callback(xk):
+        history.append(last_cost["value"])
+        print(f"  [callback] itération {len(history)}: cost = {last_cost['value']}")
+
+    res = minimize(objective_scaled, x0_norm, args=args, method="L-BFGS-B", bounds=bounds_norm, options=options, callback=callback)
+    return res, history
 
 
 def main(argv):
@@ -219,6 +240,129 @@ def main(argv):
 
         ga_params = uopt.define_genetic_algorithm_params(initial_pop_size, num_parents_mating, num_mutations)
         dataset = wrapper_genetic_algorithm(dataset, ga_params, opt_params)
+
+    elif data_init_type == 3: # L-BFGS-B
+        print("Using L-BFGS-B!")
+
+        # Initialisation des paramètres et lecture des fichiers
+        NBEAMS = 30
+        R = 1e7
+
+        # Extraction des angles THETA et PHI à partir du fichier de configuration
+        THETA = []
+        PHI = []
+        with open('../facility_config_files/xavier_ico30_theta_phi_rad.txt', 'r') as f:
+            for ligne in f:
+                ligne = ligne.strip()
+                if not ligne:  # ignore les lignes vides
+                    continue
+                valeurs = ligne.split()
+                THETA.append(float(valeurs[0]))
+                PHI.append(float(valeurs[1]))
+        THETA = np.array(THETA)
+        PHI = np.array(PHI)
+
+        # Lecture du fichier ifriit_inputs_originale.txt et extraction des paramètres P0, X0, Y0, Z0
+        with open("ifriit_inputs_originale.txt") as f:
+            ifriit_inputs_originale = f.read()
+        beam_pattern = r"&BEAM.*?/"
+        beams = re.findall(beam_pattern, ifriit_inputs_originale, flags=re.DOTALL)
+        if len(beams) != 30:
+            raise ValueError(f"{len(beams)} beams trouvés au lieu de 30")
+
+        P0_list = []
+        X0_list = []
+        Y0_list = []
+        Z0_list = []
+        for beam in beams:
+            p0 = float(re.search(r"P0_TW\s*=\s*([-+0-9.eEdD]+)", beam).group(1).replace("D", "E").replace("d", "e"))
+
+            foc = re.search(r"FOC_UM\s*=\s*([^,\n]+)\s*,\s*([^,\n]+)\s*,\s*([^,\n]+)", beam)
+
+            x = float(foc.group(1).replace("D", "E").replace("d", "e"))
+            y = float(foc.group(2).replace("D", "E").replace("d", "e"))
+            z = float(foc.group(3).replace("D", "E").replace("d", "e"))
+
+            P0_list.append(p0)
+            X0_list.append(x)
+            Y0_list.append(y)
+            Z0_list.append(z)
+
+        P0 = np.array(P0_list)
+        X0 = np.array(X0_list)
+        Y0 = np.array(Y0_list)
+        Z0 = np.array(Z0_list)
+        z_ref = np.concatenate([P0,np.zeros(NBEAMS), np.zeros(NBEAMS)]) # z_ref = [P0, alpha=0, beta=0]
+
+        # Configuration de l'optimisation
+        free_mask = np.ones(3 * NBEAMS, dtype=bool)
+        power_affected_beams = list(range(NBEAMS))
+        for beam in power_affected_beams:
+            free_mask[beam] = False
+
+        free_idx = np.where(free_mask)[0]
+        x0 = z_ref[free_idx]
+
+        bounds = []
+        for i in free_idx:
+            if i < NBEAMS:
+                bounds.append((0.9, 1.1))  # P0
+            else:
+                bounds.append((-np.pi*1e-4, np.pi*1e-4))  # alpha, beta
+
+        lo = np.array([b[0] for b in bounds])
+        hi = np.array([b[1] for b in bounds])
+        scale = (hi - lo) / 2.0
+        center = (hi + lo) / 2.0
+
+        bounds_norm = [(-1.0, 1.0)] * len(bounds)
+
+        options = {"maxiter": 4, "gtol": 1e-9, "ftol": 1e-8}
+
+        x0_norm = (x0 - center) / scale
+        ARGS = (z_ref, free_idx, ifriit_inputs_originale, X0, Y0, Z0, THETA, PHI, R)
+
+        t1 = time.time()
+        res, history = wrapper_L_BFGS_B(x0_norm, ARGS, bounds_norm, options, center, scale,NBEAMS)
+        t2 = time.time()
+
+
+        plt.figure()
+        plt.plot(history)
+        plt.yscale("log")
+        plt.xlabel("Evaluation IFRIIT")
+        plt.ylabel("Cost")
+        plt.grid()
+        plt.savefig("L-BFGS-B_cost_history.png")
+        plt.show()
+
+        print("Temps d'optimisation:", t2-t1, "secondes")
+        print("OK:", res.success)
+        print("Cost:", res.fun)
+        print("Message :", res.message)
+        print("Nombre d'itérations :", res.nit)
+        print("Nombre d'évaluations :", res.nfev)
+        print("Norme du gradient :", np.linalg.norm(res.jac))
+        print(np.max(np.abs(res.jac)))
+
+        diffs = np.diff(history)  # variation de coût entre itérations successives
+        rel_diffs = np.abs(diffs) / np.maximum(np.abs(history[:-1]), 1)
+
+        for i, (d, rd) in enumerate(zip(diffs, rel_diffs)):
+            print(f"iter {i}->{i+1}: delta_f={d:.2e}, delta_f_relatif={rd:.2e}")
+
+        z_opt = uopt.reconstruct_z(center + scale * res.x, z_ref, free_idx)
+        P0 = z_opt[:NBEAMS]
+        ALPHA = z_opt[NBEAMS:2*NBEAMS]
+        BETA  = z_opt[2*NBEAMS:3*NBEAMS]
+
+        X, Y, Z = uopt.rotation_sur_sphere(X0, Y0, Z0, R, THETA, PHI, ALPHA, BETA)
+
+        uopt.write_ifriit_input(ifriit_inputs_originale, "../ifriit/ifriit_inputs.txt", P0, X, Y, Z)
+
+        os.chdir("../ifriit")
+        sp.run(["./main"], capture_output=True, text=True)
+        os.chdir("../python_scripts")
 
     elif data_init_type == 0:
         print("Importing pre-generated data!")
