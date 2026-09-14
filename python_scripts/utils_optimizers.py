@@ -8,6 +8,16 @@ import utils_deck_generation as idg
 import time
 import sys
 
+import os
+from unittest import result
+import subprocess as sp
+import xarray as xr
+from scipy.optimize import minimize
+import healpy as hp
+import re
+import time
+import matplotlib.pyplot as plt
+
 
 
 def define_optimizer_dataset(X_all, Y_all, avg_powers_all):
@@ -303,4 +313,143 @@ def mutation(offspring_crossover, rng, pbounds, num_mutations=1, mutation_amplit
 
     return offspring_crossover
 
-#####################################################################################
+###################################### L-BFGS-B ###############################################
+
+
+def objective(x, z_ref, free_idx, ifriit_inputs_originale, X0, Y0, Z0, THETA, PHI, R,NBEAMS):
+    z = reconstruct_z(x, z_ref, free_idx)
+
+    P0    = z[:NBEAMS]
+    ALPHA = z[NBEAMS:2*NBEAMS]
+    BETA  = z[2*NBEAMS:3*NBEAMS]
+
+    X, Y, Z = rotation_sur_sphere(X0, Y0, Z0, R, THETA, PHI, ALPHA, BETA)
+
+    write_ifriit_input(ifriit_inputs_originale, "../ifriit/ifriit_inputs.txt", P0, X, Y, Z)
+
+    os.chdir("../ifriit")
+    sp.run(["./main"], capture_output=True, text=True)
+    data = read_general_netcdf("p_in_z1z2_beam_all.nc")
+    os.chdir("../python_scripts")
+    cost = read_cost(data)
+    return cost
+
+
+def reconstruct_z(x, z_ref, free_idx):
+    z = z_ref.copy()
+    z[free_idx] = x
+    return z
+
+
+def rotation_sur_sphere(X, Y, Z, R, theta_i, phi_i, alpha, beta):
+    def sph_to_cart(r, theta, phi):
+        x = r * np.sin(theta) * np.cos(phi)
+        y = r * np.sin(theta) * np.sin(phi)
+        z = r * np.cos(theta)
+        return x, y, z
+
+    def cart_to_sph(x, y, z):
+        r = np.sqrt(x**2 + y**2 + z**2)
+        theta = np.where(r != 0, np.arccos(np.divide(z, r, out=np.zeros_like(r), where=r != 0)), 0.0)  # évite la division par zéro si un point est exactement au centre
+        phi = np.arctan2(y, x)
+        return r, theta, phi
+    
+    Cx, Cy, Cz = sph_to_cart(R, theta_i, phi_i)
+
+    lx, ly, lz = X - Cx, Y - Cy, Z - Cz
+
+    r_local, theta_local, phi_local = cart_to_sph(lx, ly, lz)
+
+    theta_local_new = theta_local + alpha
+    phi_local_new = phi_local + beta
+
+    lx_new, ly_new, lz_new = sph_to_cart(r_local, theta_local_new, phi_local_new)
+
+    X_new = Cx + lx_new
+    Y_new = Cy + ly_new
+    Z_new = Cz + lz_new
+
+    return X_new, Y_new, Z_new
+
+
+def write_ifriit_input(ifriit_inputs_originale, ifriit_inputs, P0, X, Y, Z):
+    beams = []
+
+    pattern = r"&BEAM.*?/"
+    blocks = re.findall(pattern, ifriit_inputs_originale, flags=re.DOTALL)
+
+    counter = 0
+
+    def repl(_):
+        nonlocal counter
+        b = blocks[counter]
+        counter += 1
+
+        x = X[counter-1]
+        y = Y[counter-1]
+        z = Z[counter-1]
+        p0 = P0[counter-1]
+
+        b = re.sub(r"FOC_UM\s*=.*?,\s*\n", f"FOC_UM = {x:.10f}d0,{y:.10f}d0,{z:.10f}d0,\n", b)
+
+        b = re.sub(r"P0_TW\s*=.*?,\s*\n", f"P0_TW = {p0:.10f}d0,\n", b)
+
+        beams.append(b)
+        return b
+
+    new_text = re.sub(pattern, repl, ifriit_inputs_originale, flags=re.DOTALL)
+
+    with open(ifriit_inputs, "w") as f:
+        f.write(new_text)
+
+
+def read_general_netcdf(filename):
+    data = {}
+    with xr.open_dataset(filename) as ds:
+        for k, v in ds.data_vars.items():
+            data[k] = v.values
+        for k, v in ds.attrs.items():
+            data[k] = v
+    return data
+
+
+def read_cost(p_in_z1z2_beam_all):
+    def read_data(parameters):
+        def imap_norm(intensity_map):
+            avg_flux = np.mean(intensity_map)
+            return intensity_map / avg_flux - 1.0, avg_flux
+
+        def imap2modes(intensity_map_normalized, lmax):
+            modes_complex = hp.sphtfunc.map2alm(intensity_map_normalized, lmax=lmax)
+            return modes_complex.real, modes_complex.imag
+
+        def alms2power_spectrum(alms, LMAX):
+            #Cette fonction calcule les $\sigma_{l}^2 / \bar{I}$
+            the_modes = np.zeros(LMAX)
+            the_modes_full = np.zeros((LMAX,LMAX+1))
+            for l in range(LMAX):
+                for m in range(l+1):
+                    the_modes_full[l,m] = np.real(alms[hp.sphtfunc.Alm.getidx(LMAX, l, m)]*
+                        np.conjugate(alms[hp.sphtfunc.Alm.getidx(LMAX, l, m)]))
+                    if (m>0):
+                        the_modes[l] = the_modes[l] + 2.*the_modes_full[l,m]
+                    else:          
+                        the_modes[l] = the_modes[l] + the_modes_full[l,m]
+            the_modes = the_modes / (4.*np.pi)
+            return the_modes
+        
+        LMAX = 30
+        illumination_evaluation_radii = 1940.0
+        dataset = {}
+        intensity_map = parameters["intensity"] * (illumination_evaluation_radii / 10000.0)**2
+        intensity_map_normalized, dataset["avg_flux"] = imap_norm(intensity_map)
+        dataset["real_modes"], dataset["imag_modes"] = imap2modes(intensity_map_normalized, LMAX)
+        complex_modes = dataset["real_modes"] + 1j * dataset["imag_modes"]
+        dataset["sigma_l^2"] = alms2power_spectrum(complex_modes, LMAX)
+        return dataset
+    
+    dataset = read_data(p_in_z1z2_beam_all)
+    cost = 100* np.sqrt(np.sum(dataset["sigma_l^2"]))
+    return cost
+
+
