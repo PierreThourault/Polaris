@@ -181,13 +181,13 @@ def wrapper_genetic_algorithm(dataset, ga_params, opt_params):
     return dataset
 
 
-def wrapper_L_BFGS_B(x0_norm, args, bounds_norm, options, center, scale,NBEAMS):
+def wrapper_L_BFGS_B(x0_norm, args, bounds_norm, options, center, scale):
     history = []
     last_cost = {"value": None}
 
     def objective_scaled(x_norm, *args_inner):
         x_real = center + scale * x_norm
-        cost = uopt.objective(x_real, *args_inner,NBEAMS)
+        cost = uopt.objective(x_real, *args_inner)
         last_cost["value"] = cost
         return cost
 
@@ -218,7 +218,6 @@ def main(argv):
 
     if data_init_type == 1: # Generate new initialization dataset
         print("Generating data!")
-
         dataset, dataset_params, sys_params, facility_spec = tdg.main((None, sys_params["data_dir"], num_examples, "run_type=full"))
 
     elif data_init_type == 2: # Genetic algorithm
@@ -241,9 +240,57 @@ def main(argv):
         ga_params = uopt.define_genetic_algorithm_params(initial_pop_size, num_parents_mating, num_mutations)
         dataset = wrapper_genetic_algorithm(dataset, ga_params, opt_params)
 
-    elif data_init_type == 3: # L-BFGS-B
-        print("Using L-BFGS-B!")
+    elif data_init_type == 0:
+        print("Importing pre-generated data!")
+        # copy across dataset_params and facility_spec
+        shutil.copyfile(input_dir + "/" + sys_params["dataset_params_filename"],
+                        output_dir + "/" + sys_params["dataset_params_filename"])
+        shutil.copyfile(input_dir + "/" + sys_params["facility_spec_filename"],
+                        output_dir + "/" + sys_params["facility_spec_filename"])
+        shutil.copyfile(input_dir + "/" + sys_params["trainingdata_filename"],
+                        output_dir + "/" + sys_params["trainingdata_filename"])
+        shutil.copyfile(input_dir + "/" + sys_params["deck_gen_params_filename"],
+                        output_dir + "/" + sys_params["deck_gen_params_filename"])
+    else:
+        print("")
+        sys.exit("Dataset not properly specified")
 
+    print("Importing data!")
+    dataset_params = nrw.read_general_netcdf(sys_params["data_dir"] + "/" + sys_params["dataset_params_filename"])
+    facility_spec = nrw.read_general_netcdf(sys_params["data_dir"] + "/" + sys_params["facility_spec_filename"])
+    dataset = nrw.read_general_netcdf(sys_params["data_dir"] + "/" + sys_params["trainingdata_filename"])
+    num_init_examples = dataset["num_evaluated"]
+
+    use_bayesian_optimization = bool(int(argv[5]))
+    if use_bayesian_optimization: # Bayesian optimization
+        bo_n_iter = int(argv[6])
+        opt_params = uopt.define_optimizer_parameters(output_dir, num_init_examples, bo_n_iter, dataset_params,
+                                                     facility_spec, sys_params)
+        ifriit_runs_per_bo_iteration = sys_params["num_parallel_ifriits"]
+
+        target = uopt.fitness_function(dataset, opt_params)
+        target_set_undetermined = np.mean(target) / 2.0 # half mean for all undetermined BO values
+        num_mutations = int(opt_params["num_optimization_params"] / 2)
+        bo_params = uopt.define_bayesian_optimisation_params(ifriit_runs_per_bo_iteration, target_set_undetermined, num_mutations)
+        dataset = wrapper_bayesian_optimisation(dataset, bo_params, opt_params)
+        num_init_examples = dataset["num_evaluated"]
+
+    use_gradient_ascent = bool(int(argv[7]))
+    if use_gradient_ascent: # Gradient ascent
+        print("Using gradient ascent!")
+        gd_n_iter = int(argv[8])
+        line_search_evaluations = sys_params["num_parallel_ifriits"]
+        opt_params = uopt.define_optimizer_parameters(output_dir, num_init_examples, gd_n_iter, dataset_params,
+                                                     facility_spec, sys_params)
+
+        gd_params = uopt.define_gradient_ascent_params(line_search_evaluations, dataset_params["num_input_params"])
+        dataset = wrapper_gradient_ascent(dataset, gd_params, opt_params)
+        num_init_examples = dataset["num_evaluated"]
+
+    use_L_BFGS_B = bool(int(argv[12]))
+    if use_L_BFGS_B: # L-BFGS-B
+        print("Using L-BFGS-B!")
+        lbfgsb_n_iter = int(argv[13])
         # Initialisation des paramètres et lecture des fichiers
         NBEAMS = 30
         R = 1e7
@@ -263,7 +310,7 @@ def main(argv):
         PHI = np.array(PHI)
 
         # Lecture du fichier ifriit_inputs_originale.txt et extraction des paramètres P0, X0, Y0, Z0
-        with open("ifriit_inputs_originale.txt") as f:
+        with open(input_dir +"/config_0/time_0/pert_0/ifriit_inputs.txt") as f:
             ifriit_inputs_originale = f.read()
         beam_pattern = r"&BEAM.*?/"
         beams = re.findall(beam_pattern, ifriit_inputs_originale, flags=re.DOTALL)
@@ -317,13 +364,13 @@ def main(argv):
 
         bounds_norm = [(-1.0, 1.0)] * len(bounds)
 
-        options = {"maxiter": 4, "gtol": 1e-9, "ftol": 1e-8}
+        options = {"maxiter": lbfgsb_n_iter, "gtol": 1e-9, "ftol": 1e-8}
 
         x0_norm = (x0 - center) / scale
-        ARGS = (z_ref, free_idx, ifriit_inputs_originale, X0, Y0, Z0, THETA, PHI, R)
+        ARGS = (z_ref, free_idx, ifriit_inputs_originale, X0, Y0, Z0, THETA, PHI, R,NBEAMS,output_dir)
 
         t1 = time.time()
-        res, history = wrapper_L_BFGS_B(x0_norm, ARGS, bounds_norm, options, center, scale,NBEAMS)
+        res, history = wrapper_L_BFGS_B(x0_norm, ARGS, bounds_norm, options, center, scale)
         t2 = time.time()
 
 
@@ -358,58 +405,10 @@ def main(argv):
 
         X, Y, Z = uopt.rotation_sur_sphere(X0, Y0, Z0, R, THETA, PHI, ALPHA, BETA)
 
-        uopt.write_ifriit_input(ifriit_inputs_originale, "../ifriit/ifriit_inputs.txt", P0, X, Y, Z)
-
-        os.chdir("../ifriit")
+        os.chdir(output_dir)
+        uopt.write_ifriit_input(ifriit_inputs_originale,"ifriit_inputs.txt", P0, X, Y, Z)
         sp.run(["./main"], capture_output=True, text=True)
-        os.chdir("../python_scripts")
-
-    elif data_init_type == 0:
-        print("Importing pre-generated data!")
-        # copy across dataset_params and facility_spec
-        shutil.copyfile(input_dir + "/" + sys_params["dataset_params_filename"],
-                        output_dir + "/" + sys_params["dataset_params_filename"])
-        shutil.copyfile(input_dir + "/" + sys_params["facility_spec_filename"],
-                        output_dir + "/" + sys_params["facility_spec_filename"])
-        shutil.copyfile(input_dir + "/" + sys_params["trainingdata_filename"],
-                        output_dir + "/" + sys_params["trainingdata_filename"])
-        shutil.copyfile(input_dir + "/" + sys_params["deck_gen_params_filename"],
-                        output_dir + "/" + sys_params["deck_gen_params_filename"])
-    else:
-        print("")
-        sys.exit("Dataset not properly specified")
-
-    print("Importing data!")
-    dataset_params = nrw.read_general_netcdf(sys_params["data_dir"] + "/" + sys_params["dataset_params_filename"])
-    facility_spec = nrw.read_general_netcdf(sys_params["data_dir"] + "/" + sys_params["facility_spec_filename"])
-    dataset = nrw.read_general_netcdf(sys_params["data_dir"] + "/" + sys_params["trainingdata_filename"])
-    num_init_examples = dataset["num_evaluated"]
-
-    use_bayesian_optimization = bool(int(argv[5]))
-    if use_bayesian_optimization: # Bayesian optimization
-        bo_n_iter = int(argv[6])
-        opt_params = uopt.define_optimizer_parameters(output_dir, num_init_examples, bo_n_iter, dataset_params,
-                                                     facility_spec, sys_params)
-        ifriit_runs_per_bo_iteration = sys_params["num_parallel_ifriits"]
-
-        target = uopt.fitness_function(dataset, opt_params)
-        target_set_undetermined = np.mean(target) / 2.0 # half mean for all undetermined BO values
-        num_mutations = int(opt_params["num_optimization_params"] / 2)
-        bo_params = uopt.define_bayesian_optimisation_params(ifriit_runs_per_bo_iteration, target_set_undetermined, num_mutations)
-        dataset = wrapper_bayesian_optimisation(dataset, bo_params, opt_params)
-        num_init_examples = dataset["num_evaluated"]
-
-    use_gradient_ascent = bool(int(argv[7]))
-    if use_gradient_ascent: # Gradient ascent
-        print("Using gradient ascent!")
-        gd_n_iter = int(argv[8])
-        line_search_evaluations = sys_params["num_parallel_ifriits"]
-        opt_params = uopt.define_optimizer_parameters(output_dir, num_init_examples, gd_n_iter, dataset_params,
-                                                     facility_spec, sys_params)
-
-        gd_params = uopt.define_gradient_ascent_params(line_search_evaluations, dataset_params["num_input_params"])
-        dataset = wrapper_gradient_ascent(dataset, gd_params, opt_params)
-        num_init_examples = dataset["num_evaluated"]
+        os.chdir("../../python_scripts")
 
     return
 
