@@ -1,0 +1,1056 @@
+ < PREC >  REAL64 == C_DOUBLE; SUCCESS
+ < PARALL >MAXIMUM NUMBER OF THREADS           4
+ < PARALL >NUMBER OF IFRIIT MPI RANKS           1
+ Provided level of MPI // is: MPI_THREAD_MULTIPLE
+ < INPUTS > ==================================================
+ < INPUTS > ==============  READING IFRIIT INPUTS  ===========
+ < INPUTS > ==================================================
+ < INPUTS >UPDATING EPSILON_FLATNESS  PARAMETER TO  0.75000000000000000     
+ < INPUTS >IFRIIT WILL USE INVERSE RAY TRACE TO COMPUTE FIELDS
+ < INPUTS >USING LILAC LOG_LAMBDA FOR IB ABSORPTION
+ < INPUTS >USING SIMPLIFIED PERMITTIVITY FOR IB ABSORPTION
+ < INPUTS >IB COLLISIONS  FLOORED THROUGH T_FLOOR_NU_IB=   290112.65885991120      K
+&SPHERICAL_MESH
+ CGAL_MESHER=F,
+ PLATONIC_SOLID_MESHER=T,
+ USE_SIZING_FUNCTION=T,
+ NR_INI=100        ,
+ RMAX=  15520.000000000000     ,
+ DISABLE_ANGULAR_RANDOM_PERTURBATION=F,
+ DISABLE_RANDOM_ROTATION=T,
+ PLATONIC_SOLID_MESHER_ALTERNATED_RADIAL_MESH=T,
+ /
+&SIZING_FUNCTION
+ EPS_CUTOFF_VACUUM= 0.98999999999999999     ,
+ EPS_CUTOFF_VACUUM_OBSERVATION= 0.98999999999999999     ,
+ EPS_CUTOFF_SOLID=  0.0000000000000000     ,
+ RAYTRACE_MESH_N_CIRC_PERIM_MAIN_SWITCH_PS=  0.0000000000000000     ,
+ RAYTRACE_MESH_N_CIRC_PERIM_INITIALIZATION=360        ,
+ RAYTRACE_MESH_N_LAMBDA_MIN_SCALE_INITIALIZATION=  20.000000000000000     ,
+ RAYTRACE_MESH_N_CIRC_PERIM_MAIN=360        ,
+ RAYTRACE_MESH_NCELLS_SCALELENGTH=  25.000000000000000     ,
+ RAYTRACE_MESH_N_LAMBDA_MIN_SCALE= 0.10000000000000001     ,
+ RAYTRACE_MESH_N_LAMBDA_MAX_SCALE=  500.00000000000000     ,
+ DECOUPLE_OBSERVATION_MESH=T,
+ OBSERVATION_MESH_NTHETA=90         ,
+ OBSERVATION_MESH_NPHI=180        ,
+ OBSERVATION_MESH_NCELLS_SCALELENGTH=  25.000000000000000     ,
+ OBSERVATION_MESH_N_LAMBDA_MIN_SCALE= 0.10000000000000001     ,
+ OBSERVATION_MESH_N_LAMBDA_MAX_SCALE=  500.00000000000000     ,
+ /
+ < INPUTS >UPDATING MAXIMUM PERMITTIVITY  FOR COMPUTATIONS TO  0.98999999999999999     
+ < INPUTS >UPDATING MAXIMUM PERMITTIVITY  FOR OBSERVATIONS TO  0.98999999999999999     
+ < INPUTS >COMPUTING SPHERICAL HEAT SOURCE DIAGNOSTIC
+ < INPUTS >IFRIIT RUNNING IN OFFLINE MODE
+&OFFLINE_HYDRO
+ TE_KEV=  0.0000000000000000     ,
+ TI_KEV=  0.0000000000000000     ,
+ NE_NC=  0.0000000000000000     ,
+ V_CS= 3*0.0000000000000000       ,
+ NUIB_S= -1.0000000000000000     ,
+ ATOMIC_SPECIES= 20*"  ",
+ FRACS= 20*0          ,
+ NE_NC_PROF_PRESCRIBED=F,
+ NE_NC_PROF_MIN=  0.0000000000000000     ,
+ NE_NC_PROF_MAX=  0.0000000000000000     ,
+ NE_NC_PROF_POS_MIN= 3*0.0000000000000000       ,
+ NE_NC_PROF_POS_MAX= 3*0.0000000000000000       ,
+ V_CS_PROF_PRESCRIBED=F,
+ V_CS_PROF_MIN=  0.0000000000000000     ,
+ V_CS_PROF_MAX=  0.0000000000000000     ,
+ V_CS_PROF_POS_MIN= 3*0.0000000000000000       ,
+ V_CS_PROF_POS_MAX= 3*0.0000000000000000       ,
+ NE_NC_PROF_SG=  0.0000000000000000     ,
+ V_CS_PROF_SG=  0.0000000000000000     ,
+ NE_NC_PROF_GRIDDING=-1         ,
+ V_CS_PROF_GRIDDING=-1         ,
+ NBEAM_NC=0          ,
+ FORCE_AMOY=  0.0000000000000000     ,
+ FORCE_ZMOY=  0.0000000000000000     ,
+ SPHERICAL_1D_STACKEDFILE=F,
+ SPHERICAL_1D_STACKEDFILE_FILENAME="                                                                                                                                                                                                        ",
+ FROM_FILE=T,
+ V_CS_PROF_REVERSE=F,
+ CYLINDRICAL_2D_NCDFFILE=F,
+ NUMSPEC=4          ,
+ CYLINDRICAL_2D_NCDFFILE_FILENAME="                                                                                                                                                                                                        ",
+ SPHERICAL_1D_NCDFFILE=T,
+ SPHERICAL_1D_NCDFFILE_FILENAME="ifriit_1davg_input.nc                                                                                                                                                                                   ",
+ CYLINDRICAL_2D_NCDFFILE_AXIS=3          ,
+ NE_NC_PROF_DIAM= -1.0000000000000000     ,
+ /
+ < INPUTS > ==================================================
+ < INPUTS > ==============  DONE  ============================
+ < INPUTS > ==================================================
+ < INPUTS >reading BEAM namelist for beam number           1
+ < INPUTS >reading BEAM namelist for beam number           2
+ < INPUTS >reading BEAM namelist for beam number           3
+ < INPUTS >reading BEAM namelist for beam number           4
+ < INPUTS >reading BEAM namelist for beam number           5
+ < INPUTS >reading BEAM namelist for beam number           6
+ < INPUTS >reading BEAM namelist for beam number           7
+ < INPUTS >reading BEAM namelist for beam number           8
+ < INPUTS >reading BEAM namelist for beam number           9
+ < INPUTS >reading BEAM namelist for beam number          10
+ < INPUTS >reading BEAM namelist for beam number          11
+ < INPUTS >reading BEAM namelist for beam number          12
+ < INPUTS >reading BEAM namelist for beam number          13
+ < INPUTS >reading BEAM namelist for beam number          14
+ < INPUTS >reading BEAM namelist for beam number          15
+ < INPUTS >reading BEAM namelist for beam number          16
+ < INPUTS >reading BEAM namelist for beam number          17
+ < INPUTS >reading BEAM namelist for beam number          18
+ < INPUTS >reading BEAM namelist for beam number          19
+ < INPUTS >reading BEAM namelist for beam number          20
+ < INPUTS >reading BEAM namelist for beam number          21
+ < INPUTS >reading BEAM namelist for beam number          22
+ < INPUTS >reading BEAM namelist for beam number          23
+ < INPUTS >reading BEAM namelist for beam number          24
+ < INPUTS >reading BEAM namelist for beam number          25
+ < INPUTS >reading BEAM namelist for beam number          26
+ < INPUTS >reading BEAM namelist for beam number          27
+ < INPUTS >reading BEAM namelist for beam number          28
+ < INPUTS >reading BEAM namelist for beam number          29
+ < INPUTS >reading BEAM namelist for beam number          30
+ < INPUTS >no beams were fused
+ < LASER > FINALIZE_INIT_BEAMS
+ ----------------------------------------------------------------
+ ----------------------------------------------------------------
+             BEAMS: INITIALIZATION REPORT                        
+ ----------------------------------------------------------------
+ ----------------------------------------------------------------
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           1
+ Beam ID:      --- CUSTOM-1 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            0.0000000000000000        0.0000000000000000        1940.0000000000000     
+   Beam axis vector       :            0.0000000000000000        0.0000000000000000       -1.0000000000000000     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            0.0000000000000000     
+   azimuthal angle phi (deg):          0.0000000000000000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.93715743350000003     
+   on-axis intensity (1.e14 W/cm2):   0.14293871405215838     
+   on-axis v_osc/c:                    1.1343591728913800E-003
+
+   zeta1 basis vector                  1.0000000000000000        0.0000000000000000        0.0000000000000000     
+   zeta2 basis vector                 -0.0000000000000000        1.0000000000000000        0.0000000000000000     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           2
+ Beam ID:      --- CUSTOM-2 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            969.99999838020005       -599.49296956490002        1569.4929699060999     
+   Beam axis vector       :          -0.49999999916526894       0.30901699462171300      -0.80901699479658351     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            35.999999958899998     
+   azimuthal angle phi (deg):         -31.717474474700001     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.93786031989999996     
+   on-axis intensity (1.e14 W/cm2):   0.14304592088267515     
+   on-axis v_osc/c:                    1.1347844889377714E-003
+
+   zeta1 basis vector                 0.52573111305802134       0.85065080777177549        0.0000000000000000     
+   zeta2 basis vector                -0.68819096012480807       0.42532540515726330       0.58778525171214080     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           3
+ Beam ID:      --- CUSTOM-3 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            969.99999838020005        599.49296956490002        1569.4929699060999     
+   Beam axis vector       :          -0.49999999916526894      -0.30901699462171300      -0.80901699479658351     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            35.999999958899998     
+   azimuthal angle phi (deg):          31.717474474700001     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.93644935080000002     
+   on-axis intensity (1.e14 W/cm2):   0.14283071466276676     
+   on-axis v_osc/c:                    1.1339305512662098E-003
+
+   zeta1 basis vector                -0.52573111305802134       0.85065080777177549        0.0000000000000000     
+   zeta2 basis vector                -0.68819096012480807      -0.42532540515726330       0.58778525171214080     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           4
+ Beam ID:      --- CUSTOM-4 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            1569.4929672853000        970.00000127850001        599.49297173670004     
+   Beam axis vector       :          -0.80901699344550138      -0.50000000065957684      -0.30901699574105096     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            71.999999917699995     
+   azimuthal angle phi (deg):          31.717474474700001     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99985201250000000     
+   on-axis intensity (1.e14 W/cm2):   0.15250112286412601     
+   on-axis v_osc/c:                    1.1716885142027300E-003
+
+   zeta1 basis vector                -0.52573111305802123       0.85065080777177549        0.0000000000000000     
+   zeta2 basis vector                -0.26286555704233228      -0.16245984912478853       0.95105651585127959     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           5
+ Beam ID:      --- CUSTOM-5 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            599.49296660369998        1569.4929687936001        970.00000201039995     
+   Beam axis vector       :          -0.30901699309401470      -0.80901699422338769      -0.50000000103688869     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            59.999999931399998     
+   azimuthal angle phi (deg):          69.094842627700018     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0000414874000001     
+   on-axis intensity (1.e14 W/cm2):   0.15253002227588375     
+   on-axis v_osc/c:                    1.1717995281551026E-003
+
+   zeta1 basis vector                -0.93417235943346466       0.35682208854065273        0.0000000000000000     
+   zeta2 basis vector                -0.17841104464031118      -0.46708618068536517       0.86602540318579069     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           6
+ Beam ID:      --- CUSTOM-6 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -6.2179000000000002E-006   1940.0000000000000       -6.2179000000000002E-006
+   Beam axis vector       :            3.2044240885185458E-009  -1.0000000000000000        3.2044240885185458E-009
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            90.000000183599994     
+   azimuthal angle phi (deg):          90.000000183599994     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0002702025000001     
+   on-axis intensity (1.e14 W/cm2):   0.15256490674791603     
+   on-axis v_osc/c:                    1.1719335190583039E-003
+
+   zeta1 basis vector                  1.0000000000000000        3.2044240885185462E-009   0.0000000000000000     
+   zeta2 basis vector                 -1.0268333739077914E-017   3.2044240885185458E-009   1.0000000000000000     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           7
+ Beam ID:      --- CUSTOM-7 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -599.49296096959995        1569.4929709456001        970.00000201039995     
+   Beam axis vector       :           0.30901699019094070      -0.80901699533226323      -0.50000000103688869     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            59.999999931399998     
+   azimuthal angle phi (deg):          110.90515716669999     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99908254320000001     
+   on-axis intensity (1.e14 W/cm2):   0.15238376056371380     
+   on-axis v_osc/c:                    1.1712375715351032E-003
+
+   zeta1 basis vector                 0.93417236071388399       0.35682208518847164        0.0000000000000000     
+   zeta2 basis vector                 0.17841104296422064      -0.46708618132557483       0.86602540318579069     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           8
+ Beam ID:      --- CUSTOM-8 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -1569.4929638031999        970.00000691269997        599.49297173670004     
+   Beam axis vector       :           0.80901699165130281      -0.50000000356265117      -0.30901699574105096     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            71.999999917699995     
+   azimuthal angle phi (deg):          148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99985612140000002     
+   on-axis intensity (1.e14 W/cm2):   0.15250174956873305     
+   on-axis v_osc/c:                    1.1716909217320049E-003
+
+   zeta1 basis vector                 0.52573111611049417       0.85065080588524333        0.0000000000000000     
+   zeta2 basis vector                 0.26286555645936183      -0.16245985006805455       0.95105651585127959     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°           9
+ Beam ID:      --- CUSTOM-9 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -969.99999622819996        599.49297304699996        1569.4929699060999     
+   Beam axis vector       :           0.49999999805639317      -0.30901699641591152      -0.80901699479658351     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            35.999999958899998     
+   azimuthal angle phi (deg):          148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.93708637569999997     
+   on-axis intensity (1.e14 W/cm2):   0.14292787605398158     
+   on-axis v_osc/c:                    1.1343161669927246E-003
+
+   zeta1 basis vector                 0.52573111611049417       0.85065080588524344        0.0000000000000000     
+   zeta2 basis vector                 0.68819095859857160      -0.42532540762676574       0.58778525171214080     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          10
+ Beam ID:      --- CUSTOM-10 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -969.99999622819996       -599.49297304699996        1569.4929699060999     
+   Beam axis vector       :           0.49999999805639317       0.30901699641591152      -0.80901699479658351     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            35.999999958899998     
+   azimuthal angle phi (deg):         -148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.93863182079999996     
+   on-axis intensity (1.e14 W/cm2):   0.14316359305022602     
+   on-axis v_osc/c:                    1.1352511401341418E-003
+
+   zeta1 basis vector                -0.52573111611049417       0.85065080588524344        0.0000000000000000     
+   zeta2 basis vector                 0.68819095859857160       0.42532540762676574       0.58778525171214080     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          11
+ Beam ID:      --- CUSTOM-11 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            599.49296660369998       -1569.4929687936001        970.00000201039995     
+   Beam axis vector       :          -0.30901699309401470       0.80901699422338769      -0.50000000103688869     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            59.999999931399998     
+   azimuthal angle phi (deg):         -69.094842627700018     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0000736052000001     
+   on-axis intensity (1.e14 W/cm2):   0.15253492100139573     
+   on-axis v_osc/c:                    1.1718183450347859E-003
+
+   zeta1 basis vector                 0.93417235943346466       0.35682208854065273        0.0000000000000000     
+   zeta2 basis vector                -0.17841104464031118       0.46708618068536517       0.86602540318579069     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          12
+ Beam ID:      --- CUSTOM-12 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            1569.4929672853000       -970.00000127850001        599.49297173670004     
+   Beam axis vector       :          -0.80901699344550138       0.50000000065957684      -0.30901699574105096     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            71.999999917699995     
+   azimuthal angle phi (deg):         -31.717474474700001     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99974275260000001     
+   on-axis intensity (1.e14 W/cm2):   0.15248445814052214     
+   on-axis v_osc/c:                    1.1716244936947862E-003
+
+   zeta1 basis vector                 0.52573111305802123       0.85065080777177549        0.0000000000000000     
+   zeta2 basis vector                -0.26286555704233228       0.16245984912478853       0.95105651585127959     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          13
+ Beam ID:      --- CUSTOM-13 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            1569.4929691159000       -970.00000240990005       -599.49296511340003     
+   Beam axis vector       :          -0.80901699438922614       0.50000000124283095       0.30901699232662239     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            107.99999987660000     
+   azimuthal angle phi (deg):         -31.717474474700001     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0006662555000001     
+   on-axis intensity (1.e14 W/cm2):   0.15262531421467979     
+   on-axis v_osc/c:                    1.1721655072998766E-003
+
+   zeta1 basis vector                 0.52573111305802134       0.85065080777177537        0.0000000000000000     
+   zeta2 basis vector                 0.26286555413784590      -0.16245984732971724       0.95105651696069471     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          14
+ Beam ID:      --- CUSTOM-14 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            1940.0000000000000        0.0000000000000000       -6.2179000000000002E-006
+   Beam axis vector       :           -1.0000000000000000        0.0000000000000000        3.2044240885185458E-009
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            90.000000183599994     
+   azimuthal angle phi (deg):          0.0000000000000000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0007691778000001     
+   on-axis intensity (1.e14 W/cm2):   0.15264101230411758     
+   on-axis v_osc/c:                    1.1722257865724912E-003
+
+   zeta1 basis vector                  0.0000000000000000        1.0000000000000000        0.0000000000000000     
+   zeta2 basis vector                  3.2044240885185458E-009   0.0000000000000000        1.0000000000000000     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          15
+ Beam ID:      --- CUSTOM-15 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            1569.4929691159000        970.00000240990005       -599.49296511340003     
+   Beam axis vector       :          -0.80901699438922614      -0.50000000124283095       0.30901699232662239     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            107.99999987660000     
+   azimuthal angle phi (deg):          31.717474474700001     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99977990940000006     
+   on-axis intensity (1.e14 W/cm2):   0.15249012543293267     
+   on-axis v_osc/c:                    1.1716462660019038E-003
+
+   zeta1 basis vector                -0.52573111305802134       0.85065080777177537        0.0000000000000000     
+   zeta2 basis vector                 0.26286555413784590       0.16245984732971724       0.95105651696069471     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          16
+ Beam ID:      --- CUSTOM-16 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            970.00000317290005        599.49297252689996       -1569.4929658126000     
+   Beam axis vector       :          -0.50000000163477099      -0.30901699614794931       0.80901699268737681     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            143.99999983550001     
+   azimuthal angle phi (deg):          31.717474474700001     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0007658400999999     
+   on-axis intensity (1.e14 W/cm2):   0.15264050322578129     
+   on-axis v_osc/c:                    1.1722238318054147E-003
+
+   zeta1 basis vector                -0.52573111305802134       0.85065080777177526        0.0000000000000000     
+   zeta2 basis vector                 0.68819095833060950       0.42532540404838776       0.58778525461521469     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          17
+ Beam ID:      --- CUSTOM-17 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            599.49296784620003        1569.4929720465000       -969.99999597919998     
+   Beam axis vector       :          -0.30901699373453578      -0.80901699590029363       0.49999999792773409     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            119.99999986289998     
+   azimuthal angle phi (deg):          69.094842627700018     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99952474339999997     
+   on-axis intensity (1.e14 W/cm2):   0.15245120657190897     
+   on-axis v_osc/c:                    1.1714967414083765E-003
+
+   zeta1 basis vector                -0.93417235943346466       0.35682208854065273        0.0000000000000000     
+   zeta2 basis vector                 0.17841104353089615       0.46708617778087891       0.86602540498086189     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          18
+ Beam ID:      --- CUSTOM-18 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -599.49296221210000        1569.4929741985000       -969.99999597919998     
+   Beam axis vector       :           0.30901699083146178      -0.80901699700916929       0.49999999792773409     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            119.99999986289998     
+   azimuthal angle phi (deg):          110.90515716669999     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99851746100000005     
+   on-axis intensity (1.e14 W/cm2):   0.15229757213889319     
+   on-axis v_osc/c:                    1.1709062980483581E-003
+
+   zeta1 basis vector                 0.93417236071388399       0.35682208518847164        0.0000000000000000     
+   zeta2 basis vector                -0.17841104185480558       0.46708617842108846       0.86602540498086189     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          19
+ Beam ID:      --- CUSTOM-19 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -970.00000102089996        599.49297600900002       -1569.4929658126000     
+   Beam axis vector       :           0.50000000052589533      -0.30901699794214782       0.80901699268737681     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            143.99999983550001     
+   azimuthal angle phi (deg):          148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99890922449999997     
+   on-axis intensity (1.e14 W/cm2):   0.15235732535526930     
+   on-axis v_osc/c:                    1.1711359752359144E-003
+
+   zeta1 basis vector                 0.52573111611049417       0.85065080588524333        0.0000000000000000     
+   zeta2 basis vector                -0.68819095680437326       0.42532540651789025       0.58778525461521480     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          20
+ Beam ID:      --- CUSTOM-20 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -1569.4929656337999        970.00000804410001       -599.49296511340003     
+   Beam axis vector       :           0.80901699259502757      -0.50000000414590517       0.30901699232662239     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            107.99999987660000     
+   azimuthal angle phi (deg):          148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0004785194000001     
+   on-axis intensity (1.e14 W/cm2):   0.15259668001112053     
+   on-axis v_osc/c:                    1.1720555465102541E-003
+
+   zeta1 basis vector                 0.52573111611049417       0.85065080588524333        0.0000000000000000     
+   zeta2 basis vector                -0.26286555355487545       0.16245984827298324       0.95105651696069471     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          21
+ Beam ID:      --- CUSTOM-21 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -1940.0000000000000        6.9642000000000002E-006  -6.2179000000000002E-006
+   Beam axis vector       :            1.0000000000000000       -3.5901421515379525E-009   3.2044240885185458E-009
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            90.000000183599994     
+   azimuthal angle phi (deg):          179.99999979430004     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0001098509999999     
+   on-axis intensity (1.e14 W/cm2):   0.15254044934472033     
+   on-axis v_osc/c:                    1.1718395800260465E-003
+
+   zeta1 basis vector                  3.5901421515379525E-009   1.0000000000000000        0.0000000000000000     
+   zeta2 basis vector                 -3.2044240885185458E-009   1.1504337991594015E-017   1.0000000000000000     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          22
+ Beam ID:      --- CUSTOM-22 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -1569.4929656337999       -970.00000804410001       -599.49296511340003     
+   Beam axis vector       :           0.80901699259502757       0.50000000414590517       0.30901699232662239     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            107.99999987660000     
+   azimuthal angle phi (deg):         -148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0009424789000001     
+   on-axis intensity (1.e14 W/cm2):   0.15266744482814407     
+   on-axis v_osc/c:                    1.1723272781196173E-003
+
+   zeta1 basis vector                -0.52573111611049417       0.85065080588524333        0.0000000000000000     
+   zeta2 basis vector                -0.26286555355487545      -0.16245984827298324       0.95105651696069471     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          23
+ Beam ID:      --- CUSTOM-23 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -1569.4929638031999       -970.00000691269997        599.49297173670004     
+   Beam axis vector       :           0.80901699165130281       0.50000000356265117      -0.30901699574105096     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            71.999999917699995     
+   azimuthal angle phi (deg):         -148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0010807811000000     
+   on-axis intensity (1.e14 W/cm2):   0.15268853919063888     
+   on-axis v_osc/c:                    1.1724082667102862E-003
+
+   zeta1 basis vector                -0.52573111611049417       0.85065080588524333        0.0000000000000000     
+   zeta2 basis vector                 0.26286555645936183       0.16245985006805455       0.95105651585127959     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          24
+ Beam ID:      --- CUSTOM-24 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -599.49296096959995       -1569.4929709456001        970.00000201039995     
+   Beam axis vector       :           0.30901699019094070       0.80901699533226323      -0.50000000103688869     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            59.999999931399998     
+   azimuthal angle phi (deg):         -110.90515716669999     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99908255050000006     
+   on-axis intensity (1.e14 W/cm2):   0.15238376167713583     
+   on-axis v_osc/c:                    1.1712375758140424E-003
+
+   zeta1 basis vector                -0.93417236071388399       0.35682208518847164        0.0000000000000000     
+   zeta2 basis vector                 0.17841104296422064       0.46708618132557483       0.86602540318579069     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          25
+ Beam ID:      --- CUSTOM-25 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -6.2179000000000002E-006  -1940.0000000000000       -6.2179000000000002E-006
+   Beam axis vector       :            3.2044240885185458E-009   1.0000000000000000        3.2044240885185458E-009
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            90.000000183599994     
+   azimuthal angle phi (deg):         -90.000000183599994     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99883365780000000     
+   on-axis intensity (1.e14 W/cm2):   0.15234579964300665     
+   on-axis v_osc/c:                    1.1710916766387489E-003
+
+   zeta1 basis vector                 -1.0000000000000000        3.2044240885185462E-009   0.0000000000000000     
+   zeta2 basis vector                 -1.0268333739077914E-017  -3.2044240885185458E-009   1.0000000000000000     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          26
+ Beam ID:      --- CUSTOM-26 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            599.49296784620003       -1569.4929720465000       -969.99999597919998     
+   Beam axis vector       :          -0.30901699373453578       0.80901699590029363       0.49999999792773409     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            119.99999986289998     
+   azimuthal angle phi (deg):         -69.094842627700018     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99993292530000000     
+   on-axis intensity (1.e14 W/cm2):   0.15251346398331217     
+   on-axis v_osc/c:                    1.1717359225588168E-003
+
+   zeta1 basis vector                 0.93417235943346466       0.35682208854065273        0.0000000000000000     
+   zeta2 basis vector                 0.17841104353089615      -0.46708617778087891       0.86602540498086189     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          27
+ Beam ID:      --- CUSTOM-27 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -599.49296221210000       -1569.4929741985000       -969.99999597919998     
+   Beam axis vector       :           0.30901699083146178       0.80901699700916929       0.49999999792773409     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            119.99999986289998     
+   azimuthal angle phi (deg):         -110.90515716669999     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99878851619999998     
+   on-axis intensity (1.e14 W/cm2):   0.15233891447940093     
+   on-axis v_osc/c:                    1.1710652129984184E-003
+
+   zeta1 basis vector                -0.93417236071388399       0.35682208518847164        0.0000000000000000     
+   zeta2 basis vector                -0.17841104185480558      -0.46708617842108846       0.86602540498086189     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          28
+ Beam ID:      --- CUSTOM-28 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):           -970.00000102089996       -599.49297600900002       -1569.4929658126000     
+   Beam axis vector       :           0.50000000052589533       0.30901699794214782       0.80901699268737681     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            143.99999983550001     
+   azimuthal angle phi (deg):         -148.28252531970000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                        0.99993130460000001     
+   on-axis intensity (1.e14 W/cm2):   0.15251321678816118     
+   on-axis v_osc/c:                    1.1717349729785367E-003
+
+   zeta1 basis vector                -0.52573111611049417       0.85065080588524333        0.0000000000000000     
+   zeta2 basis vector                -0.68819095680437326      -0.42532540651789025       0.58778525461521480     
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          29
+ Beam ID:      --- CUSTOM-29 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---
+ <> <> POINTING AND PROFILE <> <>
+   Focalization point (um):            6.9642000000000002E-006   0.0000000000000000       -1940.0000000000000     
+   Beam axis vector       :           -3.5901421515379525E-009   0.0000000000000000        1.0000000000000000     
+   2D-transverse super Gaussian beam
+   1/e radius 1 (um):                  1513.2000000000000     
+   1/e radius 2 (um):                  1513.2000000000000     
+   super Gaussian order:               2.7999999999999998     
+   Phaseplate rotation mode:        
+       Major axis aligned in horizontal plane of chamber
+   half DPR spot separation (um):     -1.0000000000000000     
+   polarization vector:                0.0000000000000000        0.0000000000000000        0.0000000000000000     
+ <> <> BEAM-PORT CONFIGURATION <> <>
+   polar angle theta (deg):            179.99999979430004     
+   azimuthal angle phi (deg):          0.0000000000000000     
+   f-number:                           0.0000000000000000     
+ <> <> BEAM PARAMETERS <> <>
+   wavelength (um):                   0.35094999999999998     
+   initial phase:                                  (0.0000000000000000,0.0000000000000000)
+   power (TW):                         1.0012806568999999     
+   on-axis intensity (1.e14 W/cm2):   0.15271902498608961     
+   on-axis v_osc/c:                    1.1725253023925949E-003
+
+   zeta1 basis vector                  0.0000000000000000        1.0000000000000000        0.0000000000000000     
+   zeta2 basis vector                  1.0000000000000000        0.0000000000000000        3.5901421515379530E-009
+
+
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ <>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<><>-<>-<>
+ Beam n°          30
+ Beam ID:      --- CUSTOM-30 ---
+ Beam CPP ID:  --- CUSTOM ---
+ Beam QUAD ID: --- CUSTOM ---

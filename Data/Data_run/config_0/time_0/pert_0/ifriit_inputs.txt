@@ -1,0 +1,520 @@
+&GENERAL
+    INLINE                      = .FALSE.,
+    NBEAMS                      = 30,
+    CARTESIAN_MESHER            = .FALSE.,
+    CYLINDRICAL_MESHER          = .FALSE.,
+    SPHERICAL_MESHER            = .TRUE.,
+    BBOX_INTERFACE_REFRACTION   = .FALSE.,
+    TARGET_OFFSET_UM            = 0.d0,0.d0,0.d0,
+    POSTPROC_FORWARD_GO         = .FALSE.,
+    FULL_OUTPUT_PHASE_SPACE     = .FALSE.,
+    FULL_OUTPUT_BEAMS           = .FALSE.,
+    T_FLOOR_NU_IB_EV = 25.d0, 
+    LOG_LAMBDA_MODEL = "LILAC",
+    PERMITTIVITY_MODEL = "SIMPLIFIED",
+    RTBIN_SOLVER_APPROX_NRAYS_PER_FACE      = 50,
+    MODEL_STALK = .FALSE.,
+    CBET = .FALSE.,
+    ABSORPTION_LANGDON = .TRUE.,
+    DUMP_INTEGRATED_HEAT_SOURCE = .TRUE.,
+    DIAGNOSE_INPUT_BEAMS           = .TRUE.
+    DIAGNOSE_INPUT_BEAMS_RADIUS_UM = 1940.0d0,
+    DIAGNOSE_INPUT_BEAMS_HEALPIX_NSIDE      = 64
+/
+
+&INTERNAL
+    UPDT_EPSILON_FLATNESS = 0.75d0
+/
+
+&CBET_MODEL
+    CBET_DNN_KINETIC=.TRUE.,
+    CBET_LANGDON=.FALSE.,
+    CBET_POLARIZED=.FALSE.,
+    CBET_KSPREAD=.FALSE.,
+    CBET_DNDT = .FALSE.
+    CBET_DNN_CLAMP = 0.02
+    MAX_UNPOLARIZED_FIELD_GAIN = 20.0
+/
+
+&IO_PRINT
+    VERBOSE_LEVEL = 1,
+    PRINT_CHANNEL_IFRIIT_VERBOSE = 6,
+    PRINT_CHANNEL_IFRIIT = 6,
+/
+
+&OFFLINE_HYDRO
+    NBEAM_NC                                 = 0,
+    NUMSPEC                                  = 4,
+    FROM_FILE                                = .TRUE.
+    SPHERICAL_1D_NCDFFILE                     = .TRUE.
+    SPHERICAL_1D_NCDFFILE_FILENAME            = "ifriit_1davg_input.nc"
+/
+
+&SPHERICAL_MESH
+    CGAL_MESHER             = .FALSE.,
+    PLATONIC_SOLID_MESHER   = .TRUE.,
+    PLATONIC_SOLID_MESHER_ALTERNATED_RADIAL_MESH = .TRUE.
+    USE_SIZING_FUNCTION     = .TRUE.,
+    DISABLE_RANDOM_ROTATION = .TRUE.,
+    NR_INI                  = 100,
+    RMAX                    = 15520.00000d0,
+/
+
+&SIZING_FUNCTION
+    !
+    ! ---- CUTOFF PERMITTIVITIES ----
+    !
+    EPS_CUTOFF_VACUUM           = .99d0,
+    EPS_CUTOFF_VACUUM_OBSERVATION = .99d0,
+    EPS_CUTOFF_SOLID            = 0.d0,
+    !
+    ! ---- RAYTRACING MESH ----
+    !
+    ! ** warmup mode, for solid ball mode or t > raytrace_mesh_n_circ_perim_main_switch_ps
+    !
+    RAYTRACE_MESH_N_CIRC_PERIM_MAIN_SWITCH_PS = 0.d0,
+    RAYTRACE_MESH_N_CIRC_PERIM_INITIALIZATION = 360,
+    RAYTRACE_MESH_N_LAMBDA_MIN_SCALE_INITIALIZATION = 20.d0,
+    !
+    ! ** main mode
+    !
+    RAYTRACE_MESH_N_CIRC_PERIM_MAIN = 360,
+    RAYTRACE_MESH_N_LAMBDA_MIN_SCALE = .1d0,
+    RAYTRACE_MESH_N_LAMBDA_MAX_SCALE = 500.d0,
+    RAYTRACE_MESH_NCELLS_SCALELENGTH = 25.d0,
+    !
+    ! ---- OBSERVATION MESH ----
+    !
+    DECOUPLE_OBSERVATION_MESH = .TRUE.,
+    OBSERVATION_MESH_NTHETA = 90,
+    OBSERVATION_MESH_NPHI = 180,
+    OBSERVATION_MESH_N_LAMBDA_MIN_SCALE = .1d0,
+    OBSERVATION_MESH_N_LAMBDA_MAX_SCALE = 500.d0,   
+    OBSERVATION_MESH_NCELLS_SCALELENGTH = 25.d0,
+    !
+/
+
+!!!!!!!!!!!!!!!!!! beams !!!!!!!!!!!!!!!!!!
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 0.0000000000d0,0.0000000000d0,1940.0000000000d0,
+    P0_TW               = 0.9371574335d0,
+    THETA_DEG            = 0.0000000000d0,
+    PHI_DEG              = 0.0000000000d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 969.9999983802d0,-599.4929695649d0,1569.4929699061d0,
+    P0_TW               = 0.9378603199d0,
+    THETA_DEG            = 35.9999999589d0,
+    PHI_DEG              = -31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 969.9999983802d0,599.4929695649d0,1569.4929699061d0,
+    P0_TW               = 0.9364493508d0,
+    THETA_DEG            = 35.9999999589d0,
+    PHI_DEG              = 31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 1569.4929672853d0,970.0000012785d0,599.4929717367d0,
+    P0_TW               = 0.9998520125d0,
+    THETA_DEG            = 71.9999999177d0,
+    PHI_DEG              = 31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 599.4929666037d0,1569.4929687936d0,970.0000020104d0,
+    P0_TW               = 1.0000414874d0,
+    THETA_DEG            = 59.9999999314d0,
+    PHI_DEG              = 69.0948426277d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -0.0000062179d0,1940.0000000000d0,-0.0000062179d0,
+    P0_TW               = 1.0002702025d0,
+    THETA_DEG            = 90.0000001836d0,
+    PHI_DEG              = 90.0000001836d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -599.4929609696d0,1569.4929709456d0,970.0000020104d0,
+    P0_TW               = 0.9990825432d0,
+    THETA_DEG            = 59.9999999314d0,
+    PHI_DEG              = 110.9051571667d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -1569.4929638032d0,970.0000069127d0,599.4929717367d0,
+    P0_TW               = 0.9998561214d0,
+    THETA_DEG            = 71.9999999177d0,
+    PHI_DEG              = 148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -969.9999962282d0,599.4929730470d0,1569.4929699061d0,
+    P0_TW               = 0.9370863757d0,
+    THETA_DEG            = 35.9999999589d0,
+    PHI_DEG              = 148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -969.9999962282d0,-599.4929730470d0,1569.4929699061d0,
+    P0_TW               = 0.9386318208d0,
+    THETA_DEG            = 35.9999999589d0,
+    PHI_DEG              = -148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 599.4929666037d0,-1569.4929687936d0,970.0000020104d0,
+    P0_TW               = 1.0000736052d0,
+    THETA_DEG            = 59.9999999314d0,
+    PHI_DEG              = -69.0948426277d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 1569.4929672853d0,-970.0000012785d0,599.4929717367d0,
+    P0_TW               = 0.9997427526d0,
+    THETA_DEG            = 71.9999999177d0,
+    PHI_DEG              = -31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 1569.4929691159d0,-970.0000024099d0,-599.4929651134d0,
+    P0_TW               = 1.0006662555d0,
+    THETA_DEG            = 107.9999998766d0,
+    PHI_DEG              = -31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 1940.0000000000d0,0.0000000000d0,-0.0000062179d0,
+    P0_TW               = 1.0007691778d0,
+    THETA_DEG            = 90.0000001836d0,
+    PHI_DEG              = 0.0000000000d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 1569.4929691159d0,970.0000024099d0,-599.4929651134d0,
+    P0_TW               = 0.9997799094d0,
+    THETA_DEG            = 107.9999998766d0,
+    PHI_DEG              = 31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 970.0000031729d0,599.4929725269d0,-1569.4929658126d0,
+    P0_TW               = 1.0007658401d0,
+    THETA_DEG            = 143.9999998355d0,
+    PHI_DEG              = 31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 599.4929678462d0,1569.4929720465d0,-969.9999959792d0,
+    P0_TW               = 0.9995247434d0,
+    THETA_DEG            = 119.9999998629d0,
+    PHI_DEG              = 69.0948426277d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -599.4929622121d0,1569.4929741985d0,-969.9999959792d0,
+    P0_TW               = 0.9985174610d0,
+    THETA_DEG            = 119.9999998629d0,
+    PHI_DEG              = 110.9051571667d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -970.0000010209d0,599.4929760090d0,-1569.4929658126d0,
+    P0_TW               = 0.9989092245d0,
+    THETA_DEG            = 143.9999998355d0,
+    PHI_DEG              = 148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -1569.4929656338d0,970.0000080441d0,-599.4929651134d0,
+    P0_TW               = 1.0004785194d0,
+    THETA_DEG            = 107.9999998766d0,
+    PHI_DEG              = 148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -1940.0000000000d0,0.0000069642d0,-0.0000062179d0,
+    P0_TW               = 1.0001098510d0,
+    THETA_DEG            = 90.0000001836d0,
+    PHI_DEG              = 179.9999997943d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -1569.4929656338d0,-970.0000080441d0,-599.4929651134d0,
+    P0_TW               = 1.0009424789d0,
+    THETA_DEG            = 107.9999998766d0,
+    PHI_DEG              = -148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -1569.4929638032d0,-970.0000069127d0,599.4929717367d0,
+    P0_TW               = 1.0010807811d0,
+    THETA_DEG            = 71.9999999177d0,
+    PHI_DEG              = -148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -599.4929609696d0,-1569.4929709456d0,970.0000020104d0,
+    P0_TW               = 0.9990825505d0,
+    THETA_DEG            = 59.9999999314d0,
+    PHI_DEG              = -110.9051571667d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -0.0000062179d0,-1940.0000000000d0,-0.0000062179d0,
+    P0_TW               = 0.9988336578d0,
+    THETA_DEG            = 90.0000001836d0,
+    PHI_DEG              = -90.0000001836d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 599.4929678462d0,-1569.4929720465d0,-969.9999959792d0,
+    P0_TW               = 0.9999329253d0,
+    THETA_DEG            = 119.9999998629d0,
+    PHI_DEG              = -69.0948426277d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -599.4929622121d0,-1569.4929741985d0,-969.9999959792d0,
+    P0_TW               = 0.9987885162d0,
+    THETA_DEG            = 119.9999998629d0,
+    PHI_DEG              = -110.9051571667d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = -970.0000010209d0,-599.4929760090d0,-1569.4929658126d0,
+    P0_TW               = 0.9999313046d0,
+    THETA_DEG            = 143.9999998355d0,
+    PHI_DEG              = -148.2825253197d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 0.0000069642d0,0.0000000000d0,-1940.0000000000d0,
+    P0_TW               = 1.0012806569d0,
+    THETA_DEG            = 179.9999997943d0,
+    PHI_DEG              = 0.0000000000d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+&BEAM
+    LAMBDA_NM           = 350.9500000000d0,
+    FOC_UM              = 970.0000031729d0,-599.4929725269d0,-1569.4929658126d0,
+    P0_TW               = 1.0005410331d0,
+    THETA_DEG            = 143.9999998355d0,
+    PHI_DEG              = -31.7174744747d0,
+    FOCAL_M             = 10.0000000000d0,
+    LAW                  = 1,
+    SG                  = 2.800000d0,
+    RAD_1_UM            = 1513.200000d0,
+    RAD_2_UM            = 1513.200000d0,
+    FUSE_QUADS          = .FALSE.,
+/
+
+
+! Last line must not be empty
