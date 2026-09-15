@@ -7,7 +7,6 @@ import netcdf_read_write as nrw
 import utils_deck_generation as idg
 import time
 import sys
-
 import os
 from unittest import result
 import subprocess as sp
@@ -15,7 +14,6 @@ import xarray as xr
 from scipy.optimize import minimize
 import healpy as hp
 import re
-import time
 import matplotlib.pyplot as plt
 
 
@@ -316,7 +314,7 @@ def mutation(offspring_crossover, rng, pbounds, num_mutations=1, mutation_amplit
 ###################################### L-BFGS-B ###############################################
 
 
-def objective(x, z_ref, free_idx, ifriit_inputs_originale, X0, Y0, Z0, THETA, PHI, R,NBEAMS):
+def objective(x, z_ref, free_idx, ifriit_inputs_originale, X0, Y0, Z0, THETA, PHI, R,NBEAMS, output_dir):
     z = reconstruct_z(x, z_ref, free_idx)
 
     P0    = z[:NBEAMS]
@@ -325,12 +323,12 @@ def objective(x, z_ref, free_idx, ifriit_inputs_originale, X0, Y0, Z0, THETA, PH
 
     X, Y, Z = rotation_sur_sphere(X0, Y0, Z0, R, THETA, PHI, ALPHA, BETA)
 
-    write_ifriit_input(ifriit_inputs_originale, "../ifriit/ifriit_inputs.txt", P0, X, Y, Z)
-
-    os.chdir("../ifriit")
+    os.chdir(output_dir)
+    write_ifriit_input(ifriit_inputs_originale,"ifriit_inputs.txt", P0, X, Y, Z)
     sp.run(["./main"], capture_output=True, text=True)
     data = read_general_netcdf("p_in_z1z2_beam_all.nc")
-    os.chdir("../python_scripts")
+    os.chdir("../../python_scripts")
+
     cost = read_cost(data)
     return cost
 
