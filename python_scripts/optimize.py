@@ -242,6 +242,14 @@ def main(argv):
 
     elif data_init_type == 0:
         print("Importing pre-generated data!")
+        use_L_BFGS_B = bool(int(argv[12]))
+        if use_L_BFGS_B:
+            source_file = os.path.join("..", "ifriit_run_files", "main")
+            destination_file = os.path.join(output_dir, "main")
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            shutil.copy2(source_file, destination_file)
+
         # copy across dataset_params and facility_spec
         shutil.copyfile(input_dir + "/" + sys_params["dataset_params_filename"],
                         output_dir + "/" + sys_params["dataset_params_filename"])
@@ -287,18 +295,18 @@ def main(argv):
         dataset = wrapper_gradient_ascent(dataset, gd_params, opt_params)
         num_init_examples = dataset["num_evaluated"]
 
-    use_L_BFGS_B = bool(int(argv[12]))
+    
     if use_L_BFGS_B: # L-BFGS-B
         print("Using L-BFGS-B!")
+
         lbfgsb_n_iter = int(argv[13])
         # Initialisation des paramètres et lecture des fichiers
-        NBEAMS = 30
-        R = 1e7
-
+        R = 1e7 # distance des miroirs en um par rapport au centre de la cible
+        
         # Extraction des angles THETA et PHI à partir du fichier de configuration
         THETA = []
         PHI = []
-        with open('../facility_config_files/xavier_ico30_theta_phi_rad.txt', 'r') as f:
+        with open(f'../facility_config_files/{facility_spec["ifriit_facility_name"]}_theta_phi_rad.txt', 'r') as f:
             for ligne in f:
                 ligne = ligne.strip()
                 if not ligne:  # ignore les lignes vides
@@ -308,14 +316,15 @@ def main(argv):
                 PHI.append(float(valeurs[1]))
         THETA = np.array(THETA)
         PHI = np.array(PHI)
-
+        NBEAMS = len(THETA)
+        
         # Lecture du fichier ifriit_inputs_originale.txt et extraction des paramètres P0, X0, Y0, Z0
         with open(input_dir +"/config_0/time_0/pert_0/ifriit_inputs.txt") as f:
             ifriit_inputs_originale = f.read()
         beam_pattern = r"&BEAM.*?/"
         beams = re.findall(beam_pattern, ifriit_inputs_originale, flags=re.DOTALL)
-        if len(beams) != 30:
-            raise ValueError(f"{len(beams)} beams trouvés au lieu de 30")
+        if len(beams) != NBEAMS:
+            raise ValueError(f"{len(beams)} beams trouvés au lieu de {NBEAMS}")
 
         P0_list = []
         X0_list = []
