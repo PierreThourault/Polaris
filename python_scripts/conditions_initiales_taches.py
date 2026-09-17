@@ -43,7 +43,7 @@ def conditions_initiales_P0_FOC(dataset_params, deck_gen_params, facility_spec, 
                
     #### Chargement des points focaux nominaux à partir du fichier de configuration des taches ####
     beams = {}
-    with open("../facility_config_files/xavier_ico30_theta_phi_rad.txt", "r") as file:
+    with open(f'../facility_config_files/{facility_spec["ifriit_facility_name"]}.txt', 'r') as file:
         for i, line in enumerate(file):
             line = line.strip()
             if not line:

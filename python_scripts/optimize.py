@@ -295,7 +295,7 @@ def main(argv):
         dataset = wrapper_gradient_ascent(dataset, gd_params, opt_params)
         num_init_examples = dataset["num_evaluated"]
 
-    
+
     if use_L_BFGS_B: # L-BFGS-B
         print("Using L-BFGS-B!")
 
@@ -306,7 +306,7 @@ def main(argv):
         # Extraction des angles THETA et PHI à partir du fichier de configuration
         THETA = []
         PHI = []
-        with open(f'../facility_config_files/{facility_spec["ifriit_facility_name"]}_theta_phi_rad.txt', 'r') as f:
+        with open(f'../facility_config_files/{facility_spec["ifriit_facility_name"]}.txt', 'r') as f:
             for ligne in f:
                 ligne = ligne.strip()
                 if not ligne:  # ignore les lignes vides
